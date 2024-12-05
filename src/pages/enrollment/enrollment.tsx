@@ -1,8 +1,16 @@
 import { InfoPage, Table } from "dhis2-semis-components";
 import React from "react";
-import { headerColumns, rowsActions, rowsData } from "../../utils/constants/table/tableConstants";
+import { headerColumns, rowsData } from "../../utils/constants/table/tableConstants";
+import { RowActionsType } from "dhis2-semis-components/dist/declarations/types/table/TableRowActionsProps";
+import { IconCheckmarkCircle24, IconDelete24, IconEdit24 } from "@dhis2/ui";
 
 export default function EnrollmentsPage() {
+    
+    const rowsActions: RowActionsType[] = [
+        { icon: <IconEdit24 />, color: '#277314', label: `Edition`, disabled: true, loading: false, onClick: () => { alert("Edition") } },
+        { icon: <IconDelete24 />, color: '#d64d4d', label: `Delete`, disabled: false, loading: false, onClick: () => { alert("Delete") } },
+        { icon: <IconCheckmarkCircle24 />, color: '#147cd7', disabled: false, loading: false, label: 'Complete', onClick: () => { alert("Complete") } }
+    ];
 
     return (
         <div style={{ height: "80vh" }} >
