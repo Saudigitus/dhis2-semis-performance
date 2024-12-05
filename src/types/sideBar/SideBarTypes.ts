@@ -1,6 +1,7 @@
 
 interface SideBarItemProps {
     title: string
+    displayInMenu: boolean
     subItems: SideBarSubItemProps[]
 }
 
@@ -15,7 +16,9 @@ interface SideBarSubItemProps {
     disabled: boolean
     route: string
     appName: string
-    pathName?: string
+    appUrl?: string
+    displayInMenu: boolean
+    active: boolean
 }
 
 interface SideBarCollapseProps {
