@@ -51,7 +51,7 @@ function EnrollmentActionsButtons() {
                 <Tooltip title={orgUnit === null ? "Please select an organisation unit before" : ""}>
                     <span>
                         <Button icon={<IconSearch24 />}>
-                            <span className={styles.work_buttons_text}>Search {sectionName.toLowerCase()}</span>
+                            <span className={styles.work_buttons_text}>Search {sectionName?.toLowerCase()}</span>
                         </Button>
                     </span>
                 </Tooltip>
