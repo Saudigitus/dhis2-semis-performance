@@ -9,7 +9,6 @@ export default function FullLayout(props: LayoutProps) {
     return (
         <div className={style.LayoutContainer}>
             <div className={style.FullLayoutContainer}>
-                <div>
                     <SemisHeader headerItems={{
                         academicYears: {
                             options: [
@@ -91,7 +90,6 @@ export default function FullLayout(props: LayoutProps) {
                             options: []
                         }
                     }} />
-                </div>
                 <main className={style.MainContentContainer}>
                     {children}
                 </main>

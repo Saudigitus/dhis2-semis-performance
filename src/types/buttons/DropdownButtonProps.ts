@@ -2,7 +2,7 @@ import { FlyoutOptionsProps } from "./FlyoutOptionsProps"
 
 interface DropdownButtonComponentProps {
     name: string
-    icon?: React.ReactNode
+    icon?: React.ReactElement
     options: FlyoutOptionsProps[]
     disabled: boolean
 }
