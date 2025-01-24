@@ -1,0 +1,9 @@
+{
+  "version": "v1",
+  "packages": {
+    "dhis2-semis-functions": {
+      "signature": "740c2255faddff768dfe28b280d2d467",
+      "file": true
+    }
+  }
+}

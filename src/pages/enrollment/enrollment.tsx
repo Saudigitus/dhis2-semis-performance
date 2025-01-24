@@ -7,9 +7,8 @@ import EnrollmentActionsButtons from "../../components/enrollmentButtons/Enrollm
 import { modules, useHeader, useTableData, useUrlParams  } from "dhis2-semis-functions";
 
 export default function EnrollmentsPage() {
-    const { dataStoreValues } = useDataStoreKey();
+    const dataStoreData = useDataStoreKey({sectionType:"student"});
     const { programsValues } = useProgramsKeys();
-    const dataStoreData = dataStoreValues[0]
     const programData = programsValues[0]
 
     const { getData, tableData, loading } = useTableData({ module: modules.enrollment })
