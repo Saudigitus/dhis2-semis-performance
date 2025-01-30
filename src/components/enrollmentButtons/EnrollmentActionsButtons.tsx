@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import {
     IconAddCircle24,
     Button,
@@ -7,22 +7,26 @@ import {
     IconSearch24,
 } from "@dhis2/ui";
 import Tooltip from '@material-ui/core/Tooltip';
-import { FlyoutOptionsProps } from "../../types/buttons/FlyoutOptionsProps";
 import styles from './enrollmentActionsButtons.module.css'
-
 import DropdownButtonComponent from '../buttons/DropdownButton';
-import { ModalComponent, useDataStoreKey } from 'dhis2-semis-components';
 import { useGetSectionTypeLabel, useUrlParams } from 'dhis2-semis-functions';
+import { Form } from "react-final-form";
+import { FormApi } from "final-form"
+import { ProgramConfig, selectedDataStoreKey } from 'dhis2-semis-types'
+import { ModalSearchEnrollmentContent, DataExporter, DataImporter } from 'dhis2-semis-components';
 
-function EnrollmentActionsButtons() {
+interface IForm extends Record<string, any> { }
+
+function EnrollmentActionsButtons({ programData, selectedDataStoreKey }: { programData: ProgramConfig, selectedDataStoreKey: selectedDataStoreKey }) {
     const { urlParameters } = useUrlParams();
     const { school: orgUnit } = urlParameters();
     const { sectionName } = useGetSectionTypeLabel();
     const [openSearchEnrollment, setOpenSearchEnrollment] = useState<boolean>(false);
+    const formRef = useRef<FormApi<IForm, Partial<IForm>> | null>(null);
 
-    const enrollmentOptions: FlyoutOptionsProps[] = [
+    const enrollmentOptions = [
         {
-            label: `Enroll new ${sectionName}s`,
+            label: "Update",
             divider: true,
             disabled: false,
             onClick: () => { { } }
@@ -75,10 +79,15 @@ function EnrollmentActionsButtons() {
             </ButtonStrip>
 
             {openSearchEnrollment &&
-                <ModalComponent title={`Search for enrolled ${sectionName.toLowerCase()}`} open={openSearchEnrollment}
-                    handleClose={() => setOpenSearchEnrollment(false)}>
-                    Search for enrolled {sectionName.toLowerCase()}
-                </ModalComponent>}
+                <ModalSearchEnrollmentContent
+                    open={openSearchEnrollment}
+                    programConfig={programData}
+                    sectionName="student"
+                    setOpen={setOpenSearchEnrollment}
+                    form={{ Form: Form, formRef: formRef }}
+                />
+            }
+
         </div>
     )
 }
