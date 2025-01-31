@@ -10,7 +10,7 @@ import { ProgramConfig } from 'dhis2-semis-types'
 export default function EnrollmentsPage() {
     const { sectionName } = useGetSectionTypeLabel();
     const dataStoreData = useDataStoreKey({ sectionType: sectionName });
-    const { programsValues } = useProgramsKeys();
+    const programsValues = useProgramsKeys();
     const programData = programsValues[0]
     const { getData, tableData, loading } = useTableData({ module: modules.enrollment })
     const { columns } = useHeader({ dataStoreData, programConfigData: programData as unknown as ProgramConfig, tableColumns: [], module: modules.enrollment })

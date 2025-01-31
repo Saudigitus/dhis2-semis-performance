@@ -11,18 +11,14 @@ import styles from './enrollmentActionsButtons.module.css'
 import DropdownButtonComponent from '../buttons/DropdownButton';
 import { useGetSectionTypeLabel, useUrlParams } from 'dhis2-semis-functions';
 import { Form } from "react-final-form";
-import { FormApi } from "final-form"
 import { ProgramConfig, selectedDataStoreKey } from 'dhis2-semis-types'
 import { ModalSearchEnrollmentContent, DataExporter, DataImporter } from 'dhis2-semis-components';
-
-interface IForm extends Record<string, any> { }
 
 function EnrollmentActionsButtons({ programData, selectedDataStoreKey }: { programData: ProgramConfig, selectedDataStoreKey: selectedDataStoreKey }) {
     const { urlParameters } = useUrlParams();
     const { school: orgUnit } = urlParameters();
     const { sectionName } = useGetSectionTypeLabel();
     const [openSearchEnrollment, setOpenSearchEnrollment] = useState<boolean>(false);
-    const formRef = useRef<FormApi<IForm, Partial<IForm>> | null>(null);
 
     const enrollmentOptions = [
         {
@@ -84,7 +80,9 @@ function EnrollmentActionsButtons({ programData, selectedDataStoreKey }: { progr
                     programConfig={programData}
                     sectionName="student"
                     setOpen={setOpenSearchEnrollment}
-                    form={{ Form: Form, formRef: formRef }}
+                    Form={Form}
+                    setOpenNewEnrollmentModal={() => { }}
+                    setFormInitialValues={(values: any) => console.log(values)}
                 />
             }
 
