@@ -5,3 +5,5 @@ src/locales
 build
 .codegpt
 .yalc
+package-lock.json
+yarn.lock
