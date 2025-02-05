@@ -14,18 +14,27 @@ import { Form } from "react-final-form";
 import { ProgramConfig, selectedDataStoreKey } from 'dhis2-semis-types'
 import { ModalSearchEnrollmentContent, DataExporter, DataImporter } from 'dhis2-semis-components';
 
-function EnrollmentActionsButtons({ programData, selectedDataStoreKey }: { programData: ProgramConfig, selectedDataStoreKey: selectedDataStoreKey }) {
+function EnrollmentActionsButtons({ programData, selectedDataStoreKey, filetrState }: { filetrState: any, programData: ProgramConfig, selectedDataStoreKey: selectedDataStoreKey }) {
     const { urlParameters } = useUrlParams();
     const { school: orgUnit } = urlParameters();
     const { sectionName } = useGetSectionTypeLabel();
     const [openSearchEnrollment, setOpenSearchEnrollment] = useState<boolean>(false);
 
-    const enrollmentOptions = [
+    const enrollmentOptions: any = [
         {
-            label: "Update",
+            label: <DataImporter
+                baseURL='http://localhost:8080'
+                importMode='COMMIT'
+                label={'Enroll new ' + sectionName}
+                module='enrollment'
+                onError={() => { }}
+                programConfig={programData}
+                sectionType={sectionName}
+                selectedSectionDataStore={selectedDataStoreKey}
+                updating={false}
+            />,
             divider: true,
             disabled: false,
-            onClick: () => { { } }
         },
         {
             label: `Update existing ${sectionName}s`,
@@ -34,16 +43,40 @@ function EnrollmentActionsButtons({ programData, selectedDataStoreKey }: { progr
             onClick: () => { { } }
         },
         {
-            label: "Export empty template",
+            label: <DataExporter
+                Form={Form}
+                baseURL='http://localhost:8080'
+                eventFilters={filetrState.dataElements}
+                fileName='teste'
+                label='Export Empty Template'
+                module='enrollment'
+                onError={(e) => console.log(e)}
+                programConfig={programData}
+                sectionType={sectionName}
+                selectedSectionDataStore={selectedDataStoreKey}
+                empty={true}
+                stagesToExport={[selectedDataStoreKey.registration.programStage]}
+            />,
             divider: false,
             disabled: false,
-            onClick: () => { { } }
         },
         {
-            label: "Export existing students",
+            label: <DataExporter
+                Form={Form}
+                baseURL='http://localhost:8080'
+                eventFilters={filetrState.dataElements}
+                fileName='teste'
+                label='Export Existing Students'
+                module='enrollment'
+                onError={(e) => console.log(e)}
+                programConfig={programData}
+                sectionType={sectionName}
+                selectedSectionDataStore={selectedDataStoreKey}
+                empty={false}
+                stagesToExport={[selectedDataStoreKey.registration.programStage]}
+            />,
             divider: false,
             disabled: false,
-            onClick: async () => { { } }
         }
     ];
 
