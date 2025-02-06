@@ -27,8 +27,6 @@
   "exclude": [
       "node_modules",
       "dist",
-      "src/app/*",
-      "src/routes/*",
       "src/locales/*",
       "tsconfig.tsbuildinfo"
   ],
