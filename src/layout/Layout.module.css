@@ -9,14 +9,6 @@
     background-color: #F9F9FA;
 }
 
-.HeadBarLayoutContainer {
-    width: 100vw;
-    height: inherit;
-    display: flex;
-    flex-direction: column;
-    background-color: inherit;
-}
-
 .MainContentContainer {
     flex: 1;
     overflow-y: auto;
