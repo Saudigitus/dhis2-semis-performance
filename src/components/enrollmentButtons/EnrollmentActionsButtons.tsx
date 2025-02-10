@@ -27,7 +27,7 @@ function EnrollmentActionsButtons({ programData, selectedDataStoreKey, filetrSta
                 importMode='COMMIT'
                 label={'Enroll new ' + sectionName}
                 module='enrollment'
-                onError={(e) => { console.log(e) }}
+                onError={(e: any) => { console.log(e) }}
                 programConfig={programData}
                 sectionType={sectionName}
                 selectedSectionDataStore={selectedDataStoreKey}
@@ -42,7 +42,7 @@ function EnrollmentActionsButtons({ programData, selectedDataStoreKey, filetrSta
                 importMode='COMMIT'
                 label={`Update existing ${sectionName}s`}
                 module='enrollment'
-                onError={(e) => { console.log(e) }}
+                onError={(e: any) => { console.log(e) }}
                 programConfig={programData}
                 sectionType={sectionName}
                 selectedSectionDataStore={selectedDataStoreKey}
@@ -59,7 +59,7 @@ function EnrollmentActionsButtons({ programData, selectedDataStoreKey, filetrSta
                 fileName='teste'
                 label='Export Empty Template'
                 module='enrollment'
-                onError={(e) => console.log(e)}
+                onError={(e: any) => console.log(e)}
                 programConfig={programData}
                 sectionType={sectionName}
                 selectedSectionDataStore={selectedDataStoreKey}
