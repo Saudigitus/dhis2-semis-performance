@@ -2,9 +2,9 @@ import React from 'react'
 import style from "../Layout.module.css"
 import { SemisHeader } from 'dhis2-semis-components';
 import { LayoutProps } from '../../types/layout/LayoutProps';
+import { Outlet } from 'react-router-dom';
 
-export default function FullLayout(props: LayoutProps) {
-    const { children } = props;
+export default function FullLayout() {
 
     return (
         <div className={style.LayoutContainer}>
@@ -92,7 +92,7 @@ export default function FullLayout(props: LayoutProps) {
                 }}
                 />
                 <main className={style.MainContentContainer}>
-                    {children}
+                    <Outlet/>
                 </main>
             </div>
         </div>
