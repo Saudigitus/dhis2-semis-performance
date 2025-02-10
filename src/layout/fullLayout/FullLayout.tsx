@@ -5,6 +5,7 @@ import { LayoutProps } from '../../types/layout/LayoutProps';
 import { Outlet } from 'react-router-dom';
 
 export default function FullLayout() {
+    console.log("chegou aqui")
 
     return (
         <div className={style.LayoutContainer}>
