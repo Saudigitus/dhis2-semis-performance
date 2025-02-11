@@ -1,2 +1,2 @@
-import EnrollmentPage from './app/App'
-export { EnrollmentPage }
+import FinalResult from './app/App'
+export { FinalResult }

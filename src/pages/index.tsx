@@ -1,3 +1,3 @@
-import EnrollmentsPage from "./enrollment/enrollment";
+import FinalResult from "./final-result/final-result";
 
-export { EnrollmentsPage }
+export { FinalResult }
