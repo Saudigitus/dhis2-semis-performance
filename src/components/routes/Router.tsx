@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, HashRouter} from 'react-router-dom';
+import { Routes, Route, HashRouter } from 'react-router-dom';
 import { FinalResult } from '../../pages';
 import { FullLayout } from '../../layout';
 
@@ -9,7 +9,7 @@ export default function Router() {
         <HashRouter>
             <Routes>
                 <Route path='/' element={<FullLayout />}>
-                    <Route key={'enrollments'} path={'/'} element={<FinalResult />} />
+                    <Route key={'final-result'} path={'/'} element={<FinalResult />} />
                 </Route>
             </Routes>
         </HashRouter>
