@@ -8,16 +8,17 @@ import { staticForm } from "../../constants/searchEnrollmentForm";
 import { format } from "date-fns";
 import { usePromoteStudents } from "../../hooks/promote/usePromoteStudents";
 
-export default function PerformPromotion({ selected }: { selected: any[] }) {
+export default function PerformPromotion({ selected, setStats, openStats }: { openStats: (args: boolean) => void, setStats: any, selected: any[] }) {
     const programsValues = useProgramsKeys();
     const { urlParameters } = useUrlParams()
-    const { schoolName, school } = urlParameters()
+    const { schoolName } = urlParameters()
     const programData = programsValues[0];
     const dataStoreData = useDataStoreKey({ sectionType: "student" });
     const { formData } = useBuildForm({ dataStoreData, programData, module: Modules.Enrollment });
     const [enrollmentDetails = []] = formData;
     const [open, setOpen] = useState(false)
-    const { promote } = usePromoteStudents({ selected })
+    const [loading, setLoading] = useState(false)
+    const { promote } = usePromoteStudents({ selected, setOpen: openStats, setStats, setOpenPerform: setOpen, setLoading })
 
     const onClick = async (values: any) => await promote(values)
 
@@ -40,7 +41,7 @@ export default function PerformPromotion({ selected }: { selected: any[] }) {
                             <WithPadding>
                                 <CustomForm
                                     Form={Form}
-                                    loading={false}
+                                    loading={loading}
                                     initialValues={{ registeringSchool: schoolName, enrollment_date: format(new Date(), 'yyyy-MM-dd') }}
                                     formFields={[
                                         {
