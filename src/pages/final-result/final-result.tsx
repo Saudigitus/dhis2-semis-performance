@@ -1,8 +1,8 @@
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { ProgramConfig } from 'dhis2-semis-types'
 import React, { useEffect, useState } from "react";
 import { TableDataRefetch, Modules } from "dhis2-semis-types"
-import { IconDelete24, IconEdit24 } from "@dhis2/ui";
+import { IconDelete24 } from "@dhis2/ui";
 import { InfoPage, useDataStoreKey } from 'dhis2-semis-components'
 import { Table, useProgramsKeys } from "dhis2-semis-components";
 import EnrollmentActionsButtons from "../../components/enrollmentButtons/EnrollmentActionsButtons";
@@ -20,7 +20,7 @@ export default function FinalResult() {
   const { getData, tableData, loading } = useTableData({ module: Modules.Final_Result, selectedDataStore: dataStoreData });
   const { columns } = useHeader({ dataStoreData, programConfigData: programData as unknown as ProgramConfig, tableColumns: [], module: Modules.Final_Result });
   const [filetrState, setFilterState] = useState<{ dataElements: any[], attributes: any[] }>({ attributes: [], dataElements: [] });
-  const [refetch,] = useRecoilState(TableDataRefetch);
+  const refetch = useRecoilValue(TableDataRefetch);
 
   const rowsActions = [
     { icon: <IconDelete24 />, color: '#d64d4d', label: `Delete`, disabled: false, loading: false, onClick: (e: any) => { console.log(e) } },
@@ -68,7 +68,7 @@ export default function FinalResult() {
               rowAction={rowsActions}
               defaultFilterNumber={3}
               showRowActions
-              filterState={{ attributes: [], dataElements: [] }}
+              filterState={filetrState}
               loading={loading}
               rightElements={<EnrollmentActionsButtons selected={selected} filetrState={filetrState} selectedDataStoreKey={dataStoreData} programData={programData as unknown as ProgramConfig} />}
               setFilterState={setFilterState}

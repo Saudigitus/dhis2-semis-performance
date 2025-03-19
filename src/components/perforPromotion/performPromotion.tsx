@@ -6,6 +6,7 @@ import { useDataStoreKey, WithBorder, useProgramsKeys, CustomForm, ModalComponen
 import { Form } from "react-final-form";
 import { staticForm } from "../../constants/searchEnrollmentForm";
 import { format } from "date-fns";
+import { usePromoteStudents } from "../../hooks/promote/usePromoteStudents";
 
 export default function PerformPromotion({ selected }: { selected: any[] }) {
     const programsValues = useProgramsKeys();
@@ -16,6 +17,9 @@ export default function PerformPromotion({ selected }: { selected: any[] }) {
     const { formData } = useBuildForm({ dataStoreData, programData, module: Modules.Enrollment });
     const [enrollmentDetails = []] = formData;
     const [open, setOpen] = useState(false)
+    const { promote } = usePromoteStudents({ selected })
+
+    const onClick = async (values: any) => await promote(values)
 
     return (
         <>
@@ -52,7 +56,7 @@ export default function PerformPromotion({ selected }: { selected: any[] }) {
                                     ]}
                                     storyBook={false}
                                     withButtons={true}
-                                    onFormSubtmit={(e) => console.log(e)}
+                                    onFormSubtmit={(values) => onClick(values)}
                                     onCancel={() => setOpen(false)}
                                 />
                             </WithPadding>

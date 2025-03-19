@@ -44,7 +44,7 @@ function EnrollmentActionsButtons({ programData, selectedDataStoreKey, filetrSta
                 sectionType={sectionName}
                 selectedSectionDataStore={selectedDataStoreKey}
                 empty={false}
-                stagesToExport={[selectedDataStoreKey['final-result']?.programStage]}
+                stagesToExport={[selectedDataStoreKey?.['final-result']?.programStage as unknown as string]}
             />,
             divider: false,
             disabled: false,

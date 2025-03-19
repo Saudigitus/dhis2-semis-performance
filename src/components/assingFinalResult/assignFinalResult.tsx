@@ -1,17 +1,17 @@
-import { useGetDataElements, useUrlParams,  } from "dhis2-semis-functions";
+import { useGetDataElements, useUrlParams, useUploadEvents } from "dhis2-semis-functions";
 import { useState } from "react";
 import { NoticeBox, Button, IconAddCircle24 } from "@dhis2/ui";
 import { useDataStoreKey, WithBorder, ModalComponent, CustomForm, WithPadding } from "dhis2-semis-components";
 import { Form } from "react-final-form";
 
-export default function AsssignFinalResult({ selected }: { selected: any[]}) {
+export default function AsssignFinalResult({ selected }: { selected: any[] }) {
     const { urlParameters } = useUrlParams()
     const { sectionType } = urlParameters()
     const { "final-result": fr } = useDataStoreKey({ sectionType: sectionType as unknown as "student" | "staff" })
     const { dataElements } = useGetDataElements({ programStageId: fr?.programStage as unknown as string, type: "programStage" })
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
-    const { uploadValues } = {uploadValues:{}}
+    const { uploadValues } = useUploadEvents()
 
     async function formSubmit(values: any) {
         setLoading(true)
@@ -29,9 +29,9 @@ export default function AsssignFinalResult({ selected }: { selected: any[]}) {
                 ]
             })
         }
-        // await uploadValues({ events: events }, 'COMMIT', 'CREATE_AND_UPDATE')
-        //     .then(() => setLoading(false))
-        //     .catch(() => setLoading(false))
+        await uploadValues({ events: events }, 'COMMIT', 'CREATE_AND_UPDATE')
+            .then(() => setLoading(false))
+            .catch(() => setLoading(false))
     }
 
 
