@@ -24,7 +24,7 @@ export default function PerformPromotion({ selected, setStats, openStats }: { op
 
     return (
         <>
-            <Button onClick={() => {
+            <Button disabled={selected?.length == 0} onClick={() => {
                 setOpen(true);
             }} icon={<IconAddCircle24 />}
             >

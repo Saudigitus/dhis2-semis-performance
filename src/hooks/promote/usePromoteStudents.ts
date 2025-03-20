@@ -54,6 +54,7 @@ export function usePromoteStudents({ selected, setOpen, setStats, setOpenPerform
                 }
 
                 events.push(getEventStructure(dataStoreData.registration.programStage, registration))
+                events.push(getEventStructure(dataStoreData["final-result"]?.programStage as unknown as string, []))
 
                 dataStoreData.performance?.programStages.forEach(performanceProgramStage => {
                     events.push(getEventStructure(performanceProgramStage.programStage, []))
@@ -77,8 +78,6 @@ export function usePromoteStudents({ selected, setOpen, setStats, setOpenPerform
                     })
             } else setStats((prev: any) => ({ ...prev, conflicts: [...prev.conflicts, tei] }))
         }
-
-        console.log(enrollments)
 
         if (enrollments.length > 0) await uploadValues({ trackedEntities: enrollments }, 'COMMIT', 'CREATE_AND_UPDATE')
 

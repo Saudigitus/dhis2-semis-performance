@@ -1,8 +1,10 @@
-import { useGetDataElements, useUrlParams, useUploadEvents } from "dhis2-semis-functions";
+import { useGetDataElements, useUrlParams, useUploadEvents, useGetEvents } from "dhis2-semis-functions";
 import { useState } from "react";
 import { NoticeBox, Button, IconAddCircle24 } from "@dhis2/ui";
 import { useDataStoreKey, WithBorder, ModalComponent, CustomForm, WithPadding } from "dhis2-semis-components";
 import { Form } from "react-final-form";
+import { TableDataRefetch } from "dhis2-semis-types";
+import { useSetRecoilState } from "recoil";
 
 export default function AsssignFinalResult({ selected }: { selected: any[] }) {
     const { urlParameters } = useUrlParams()
@@ -12,6 +14,8 @@ export default function AsssignFinalResult({ selected }: { selected: any[] }) {
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
     const { uploadValues } = useUploadEvents()
+    const { getEvents } = useGetEvents()
+    const setRefetch = useSetRecoilState(TableDataRefetch);
 
     async function formSubmit(values: any) {
         setLoading(true)
@@ -19,8 +23,11 @@ export default function AsssignFinalResult({ selected }: { selected: any[] }) {
         let frStatus = Object.keys(values)[0]
 
         for (const tei of selected) {
+            const frEvents = await getEvents({ program: tei.programId, fields: "*", trackedEntity: tei.trackedEntity, programStage: fr?.programStage })
+            const enrollmentEvent = frEvents.find((x: any) => x.enrollment === tei.enrollmentId)
+
             events.push({
-                ...tei.frEvent,
+                ...enrollmentEvent,
                 dataValues: [
                     {
                         dataElement: frStatus,
@@ -28,16 +35,17 @@ export default function AsssignFinalResult({ selected }: { selected: any[] }) {
                     }
                 ]
             })
+
         }
         await uploadValues({ events: events }, 'COMMIT', 'CREATE_AND_UPDATE')
-            .then(() => setLoading(false))
-            .catch(() => setLoading(false))
+            .then(() => { setLoading(false); setRefetch(prev => (!prev)); setOpen(false) })
+            .catch(() => { setLoading(false); setOpen(false) })
     }
 
 
     return (
         <>
-            <Button onClick={() => {
+            <Button disabled={selected?.length == 0} onClick={() => {
                 setOpen(true);
             }} icon={<IconAddCircle24 />}
             >
