@@ -28,7 +28,15 @@ export default function FinalResult() {
 
   useEffect(() => {
     setSelected([])
-    void getData({ page: 1, pageSize: 10, program: programData.id as string, orgUnit: "Shc3qNhrPAz", baseProgramStage: dataStoreData?.registration?.programStage as string, attributeFilters: filetrState.attributes, dataElementFilters: [`${dataStoreData?.registration?.academicYear}:in:2023`] })
+    void getData({
+      page: 1,
+      pageSize: 10,
+      program: programData.id as string,
+      orgUnit: "Shc3qNhrPAz",
+      baseProgramStage: dataStoreData?.registration?.programStage as string,
+      attributeFilters: filetrState.attributes,
+      dataElementFilters: filetrState.dataElements
+    })
   }, [filetrState, refetch])
 
   useEffect(() => {

@@ -12,7 +12,7 @@ import ShowStats from '../stats/showStats';
 
 function EnrollmentActionsButtons({ programData, selectedDataStoreKey, filetrState, selected }: { selected: any, filetrState: any, programData: ProgramConfig, selectedDataStoreKey: selectedDataStoreKey }) {
     const { urlParameters } = useUrlParams();
-    const { school: orgUnit } = urlParameters();
+    const { school: orgUnit, class: section, grade, academicYear } = urlParameters();
     const { sectionName } = useGetSectionTypeLabel();
     const [stats, setStats] = useState<{ posted: number, conflicts: any[] }>({ posted: 0, conflicts: [] })
     const [open, setOpen] = useState<boolean>(false)
@@ -65,9 +65,9 @@ function EnrollmentActionsButtons({ programData, selectedDataStoreKey, filetrSta
                     <PerformPromotion openStats={setOpen} setStats={setStats} selected={selected} />
                 </Tooltip>
 
-                < DropdownButton
+                <DropdownButton
                     name={<span className={styles.work_buttons_text}>Bulk Final Result</span> as unknown as string}
-                    disabled={false}
+                    disabled={!!(orgUnit == undefined || section == undefined || grade == undefined || academicYear == undefined)}
                     icon={<IconUserGroup16 />}
                     options={enrollmentOptions}
                 />
