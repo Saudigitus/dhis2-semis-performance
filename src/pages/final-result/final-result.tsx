@@ -46,9 +46,9 @@ export default function FinalResult() {
 
   useEffect(() => {
     const filters = [
-      `${dataStoreData.registration.academicYear}:in:${academicYear}`,
-      `${dataStoreData.registration.grade}:in:${grade}`,
-      `${dataStoreData.registration.section}:in:${section}`,
+      academicYear && `${dataStoreData.registration.academicYear}:in:${academicYear}`,
+      grade && `${dataStoreData.registration.grade}:in:${grade}`,
+      section && `${dataStoreData.registration.section}:in:${section}`,
     ]
     setFilterState({ dataElements: filters, attributes: [] })
   }, [academicYear, grade, section])
