@@ -10,7 +10,7 @@ import AsssignFinalResult from '../assingFinalResult/assignFinalResult';
 import PerformPromotion from '../perforPromotion/performPromotion';
 import ShowStats from '../stats/showStats';
 
-function EnrollmentActionsButtons({ programData, selectedDataStoreKey, filetrState, selected }: { selected: any, filetrState: any, programData: ProgramConfig, selectedDataStoreKey: selectedDataStoreKey }) {
+function EnrollmentActionsButtons({ programData, selectedDataStoreKey, filterState, selected }: { selected: any, filterState: any, programData: ProgramConfig, selectedDataStoreKey: selectedDataStoreKey }) {
     const { urlParameters } = useUrlParams();
     const { school: orgUnit, class: section, grade, academicYear } = urlParameters();
     const { sectionName } = useGetSectionTypeLabel();
@@ -38,7 +38,7 @@ function EnrollmentActionsButtons({ programData, selectedDataStoreKey, filetrSta
             label: <DataExporter
                 Form={Form}
                 baseURL='http://localhost:8080'
-                eventFilters={filetrState.dataElements}
+                eventFilters={filterState.dataElements}
                 fileName='teste'
                 label='Export Final Result'
                 module='final-result'

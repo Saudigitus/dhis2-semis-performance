@@ -8,7 +8,7 @@ import { Table, useProgramsKeys } from "dhis2-semis-components";
 import EnrollmentActionsButtons from "../../components/enrollmentButtons/EnrollmentActionsButtons";
 import { useGetSectionTypeLabel, useHeader, useTableData, useUrlParams, useViewPortWidth } from "dhis2-semis-functions";
 
-export default function FinalResult() {
+export default function Performance() {
   const { sectionName } = useGetSectionTypeLabel();
   const dataStoreData = useDataStoreKey({ sectionType: sectionName });
   const programsValues = useProgramsKeys();
@@ -18,14 +18,10 @@ export default function FinalResult() {
   const [selected, setSelected] = useState([])
   const [pagination, setPagination] = useState({ page: 1, pageSize: 10, totalPages: 0 })
   const { academicYear, grade, class: section, schoolName, school } = urlParameters();
-  const { getData, tableData, loading } = useTableData({ module: Modules.Final_Result, selectedDataStore: dataStoreData });
-  const { columns } = useHeader({ dataStoreData, programConfigData: programData as unknown as ProgramConfig, tableColumns: [], module: Modules.Final_Result });
-  const [filetrState, setFilterState] = useState<{ dataElements: any[], attributes: any[] }>({ attributes: [], dataElements: [] });
+  const { getData, tableData, loading } = useTableData({ module: Modules.Performance, selectedDataStore: dataStoreData });
+  const { columns } = useHeader({ dataStoreData, programConfigData: programData as unknown as ProgramConfig, tableColumns: [], module: Modules.Performance });
+  const [filterState, setFilterState] = useState<{ dataElements: any[], attributes: any[] }>({ attributes: [], dataElements: [] });
   const refetch = useRecoilValue(TableDataRefetch);
-
-  const rowsActions = [
-    { icon: <IconDelete24 />, color: '#d64d4d', label: `Delete`, disabled: false, loading: false, onClick: (e: any) => { console.log(e) } },
-  ];
 
   useEffect(() => {
     setSelected([])
@@ -33,12 +29,12 @@ export default function FinalResult() {
       page: pagination.page,
       pageSize: pagination.pageSize,
       program: programData.id as string,
-      orgUnit: "Shc3qNhrPAz",
+      orgUnit: school!,
       baseProgramStage: dataStoreData?.registration?.programStage as string,
-      attributeFilters: filetrState.attributes,
-      dataElementFilters: filetrState.dataElements
+      attributeFilters: filterState.attributes,
+      dataElementFilters: filterState.dataElements
     })
-  }, [filetrState, refetch, pagination.page, pagination.pageSize])
+  }, [filterState, refetch, pagination.page, pagination.pageSize])
 
   useEffect(() => {
     setPagination((prev) => ({ ...prev, totalPages: tableData.pagination.totalPages }))
@@ -59,7 +55,7 @@ export default function FinalResult() {
       {
         !(Boolean(schoolName) && Boolean(school)) ?
           <InfoPage
-            title="SEMIS-Final-Result"
+            title="SEMIS-Performance"
             sections={[
               {
                 sectionTitle: "Follow the instructions to proceed:",
@@ -74,16 +70,14 @@ export default function FinalResult() {
           <>
             <Table
               programConfig={programData}
-              title="Final Results"
+              title="Performance"
               viewPortWidth={viewPortWidth}
               columns={columns}
               tableData={tableData.data}
-              rowAction={rowsActions}
               defaultFilterNumber={3}
-              showRowActions
-              filterState={filetrState}
+              filterState={filterState}
               loading={loading}
-              rightElements={<EnrollmentActionsButtons selected={selected} filetrState={filetrState} selectedDataStoreKey={dataStoreData} programData={programData as unknown as ProgramConfig} />}
+              rightElements={<EnrollmentActionsButtons selected={selected} filterState={filterState} selectedDataStoreKey={dataStoreData} programData={programData as unknown as ProgramConfig} />}
               setFilterState={setFilterState}
               selectable={true}
               selected={selected}
