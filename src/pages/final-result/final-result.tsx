@@ -1,4 +1,4 @@
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { ProgramConfig } from 'dhis2-semis-types'
 import React, { useEffect, useState } from "react";
 import { TableDataRefetch, Modules } from "dhis2-semis-types"
@@ -16,6 +16,7 @@ export default function FinalResult() {
   const { viewPortWidth } = useViewPortWidth();
   const { urlParameters } = useUrlParams();
   const [selected, setSelected] = useState([])
+  const [pagination, setPagination] = useState({ page: 1, pageSize: 10, totalPages: 0 })
   const { academicYear, grade, class: section, schoolName, school } = urlParameters();
   const { getData, tableData, loading } = useTableData({ module: Modules.Final_Result, selectedDataStore: dataStoreData });
   const { columns } = useHeader({ dataStoreData, programConfigData: programData as unknown as ProgramConfig, tableColumns: [], module: Modules.Final_Result });
@@ -27,14 +28,27 @@ export default function FinalResult() {
   ];
 
   useEffect(() => {
-    void getData({ page: 1, pageSize: 10, program: programData.id as string, orgUnit: "Shc3qNhrPAz", baseProgramStage: dataStoreData?.registration?.programStage as string, attributeFilters: filetrState.attributes, dataElementFilters: [`${dataStoreData?.registration?.academicYear}:in:2023`] })
-  }, [filetrState, refetch])
+    setSelected([])
+    void getData({
+      page: pagination.page,
+      pageSize: pagination.pageSize,
+      program: programData.id as string,
+      orgUnit: "Shc3qNhrPAz",
+      baseProgramStage: dataStoreData?.registration?.programStage as string,
+      attributeFilters: filetrState.attributes,
+      dataElementFilters: filetrState.dataElements
+    })
+  }, [filetrState, refetch, pagination.page, pagination.pageSize])
+
+  useEffect(() => {
+    setPagination((prev) => ({ ...prev, totalPages: tableData.pagination.totalPages }))
+  }, [tableData])
 
   useEffect(() => {
     const filters = [
-      `${dataStoreData.registration.academicYear}:in:${academicYear}`,
-      `${dataStoreData.registration.grade}:in:${grade}`,
-      `${dataStoreData.registration.section}:in:${section}`,
+      academicYear && `${dataStoreData.registration.academicYear}:in:${academicYear}`,
+      grade && `${dataStoreData.registration.grade}:in:${grade}`,
+      section && `${dataStoreData.registration.section}:in:${section}`,
     ]
     setFilterState({ dataElements: filters, attributes: [] })
   }, [academicYear, grade, section])
@@ -63,8 +77,7 @@ export default function FinalResult() {
               title="Final Results"
               viewPortWidth={viewPortWidth}
               columns={columns}
-              totalElements={4}
-              tableData={tableData}
+              tableData={tableData.data}
               rowAction={rowsActions}
               defaultFilterNumber={3}
               showRowActions
@@ -75,6 +88,9 @@ export default function FinalResult() {
               selectable={true}
               selected={selected}
               setSelected={setSelected}
+              pagination={pagination}
+              setPagination={setPagination}
+              paginate={!loading}
             />
           </>
       }

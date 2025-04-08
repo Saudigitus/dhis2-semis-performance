@@ -1,10 +1,8 @@
 import { useGetEvents, useGetSectionTypeLabel, useUploadEvents, useUrlParams } from "dhis2-semis-functions"
 import { useDataStoreKey, useProgramsKeys } from "dhis2-semis-components";
-import { TableDataRefetch } from "dhis2-semis-types";
-import { useSetRecoilState } from "recoil";
 import { format } from "date-fns";
 
-export function usePromoteStudents({ selected }: { selected: any[] }) {
+export function usePromoteStudents({ selected, setOpen, setStats, setOpenPerform, setLoading }: { setLoading: (args: boolean) => void, setOpenPerform: any, setStats: (args: any) => void, selected: any[], setOpen: (args: boolean) => void }) {
     const { getEvents } = useGetEvents()
     const { sectionName } = useGetSectionTypeLabel();
     const dataStoreData = useDataStoreKey({ sectionType: sectionName });
@@ -13,12 +11,12 @@ export function usePromoteStudents({ selected }: { selected: any[] }) {
     const programsValues = useProgramsKeys();
     const programData = programsValues[0];
     const { uploadValues } = useUploadEvents()
-    const setRefetch = useSetRecoilState(TableDataRefetch);
 
     async function promote(values: any) {
+        setLoading(true)
         let registration: any = []
         const scPstage = dataStoreData["socio-economics"].programStage
-        let enrollments: any = []
+        let enrollments: any[] = []
         let date = format(new Date(), 'yyyy-MM-dd')
 
         Object.keys(dataStoreData.registration).forEach((ds: any) => {
@@ -35,50 +33,58 @@ export function usePromoteStudents({ selected }: { selected: any[] }) {
         }
 
         for (const tei of selected) {
-            let events = []
-            let socioEconomicDataValues: any = []
+            const checkAlreadyPromoted = await getEvents({ program: tei.programId, fields: "*", trackedEntity: tei.trackedEntity, programStage: dataStoreData.registration.programStage, filter: [`${dataStoreData.registration.academicYear}:in:${values?.[dataStoreData.registration.academicYear]}`] })
 
-            const scData = await getEvents({ program: tei.programId, fields: "*", trackedEntity: tei.trackedEntity, programStage: scPstage })
-            const event = scData?.find((x: any) => x.enrollment === tei.enrollmentId)
+            if (checkAlreadyPromoted?.length === 0) {
+                let events = []
+                let socioEconomicDataValues: any = []
 
-            if (event) {
-                event?.dataValues.forEach((dataValue: any) => {
-                    socioEconomicDataValues.push({
-                        dataElement: dataValue?.dataElement,
-                        value: dataValue?.value
+                const scData = await getEvents({ program: tei.programId, fields: "*", trackedEntity: tei.trackedEntity, programStage: scPstage })
+                const event = scData?.find((x: any) => x.enrollment === tei.enrollmentId)
+
+                if (event) {
+                    event?.dataValues.forEach((dataValue: any) => {
+                        socioEconomicDataValues.push({
+                            dataElement: dataValue?.dataElement,
+                            value: dataValue?.value
+                        })
                     })
+
+                    events.push(getEventStructure(scPstage, socioEconomicDataValues))
+                }
+
+                events.push(getEventStructure(dataStoreData.registration.programStage, registration))
+                events.push(getEventStructure(dataStoreData["final-result"]?.programStage as unknown as string, []))
+
+                dataStoreData.performance?.programStages.forEach(performanceProgramStage => {
+                    events.push(getEventStructure(performanceProgramStage.programStage, []))
                 })
 
-                events.push(getEventStructure(scPstage, socioEconomicDataValues))
-            }
-
-            events.push(getEventStructure(dataStoreData.registration.programStage, registration))
-
-            dataStoreData.performance?.programStages.forEach(performanceProgramStage => {
-                events.push(getEventStructure(performanceProgramStage.programStage, []))
-            })
-
-            enrollments.push(
-                {
-                    enrollments: [
-                        {
-                            occurredAt: date,
-                            enrolledAt: values.enrollment_date,
-                            program: programData.id,
-                            orgUnit,
-                            status: "COMPLETED",
-                            events: events
-                        }
-                    ],
-                    orgUnit,
-                    trackedEntityType: dataStoreData.trackedEntityType,
-                    trackedEntity: tei.trackedEntity
-                })
+                enrollments.push(
+                    {
+                        enrollments: [
+                            {
+                                occurredAt: date,
+                                enrolledAt: values.enrollment_date,
+                                program: programData.id,
+                                orgUnit,
+                                status: "COMPLETED",
+                                events: events
+                            }
+                        ],
+                        orgUnit,
+                        trackedEntityType: dataStoreData.trackedEntityType,
+                        trackedEntity: tei.trackedEntity
+                    })
+            } else setStats((prev: any) => ({ ...prev, conflicts: [...prev.conflicts, tei] }))
         }
 
-        await uploadValues({ trackedEntities: enrollments }, 'COMMIT', 'CREATE_AND_UPDATE').then((resp) => {
-            setRefetch(prevValue => (!prevValue))
-        })
+        if (enrollments.length > 0) await uploadValues({ trackedEntities: enrollments }, 'COMMIT', 'CREATE_AND_UPDATE')
+
+        setStats((prev: any) => ({ ...prev, posted: enrollments.length }))
+        setOpenPerform(false)
+        setLoading(false)
+        setOpen(true)
     }
 
     return { promote }
