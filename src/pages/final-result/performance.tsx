@@ -2,11 +2,20 @@ import { useRecoilValue } from 'recoil';
 import { ProgramConfig } from 'dhis2-semis-types'
 import React, { useEffect, useState } from "react";
 import { TableDataRefetch, Modules } from "dhis2-semis-types"
-import { IconDelete24 } from "@dhis2/ui";
-import { InfoPage, useDataStoreKey } from 'dhis2-semis-components'
+import { InfoPage, SwitchButtonView, useDataStoreKey } from 'dhis2-semis-components'
 import { Table, useProgramsKeys } from "dhis2-semis-components";
 import EnrollmentActionsButtons from "../../components/enrollmentButtons/EnrollmentActionsButtons";
 import { useGetSectionTypeLabel, useHeader, useTableData, useUrlParams, useViewPortWidth } from "dhis2-semis-functions";
+
+interface ProgramStage {
+  id: string;
+  displayName: string;
+}
+
+interface FilteredStage {
+  id: string;
+  label: string;
+}
 
 export default function Performance() {
   const { sectionName } = useGetSectionTypeLabel();
@@ -14,17 +23,16 @@ export default function Performance() {
   const programsValues = useProgramsKeys();
   const programData = programsValues[0];
   const { viewPortWidth } = useViewPortWidth();
-  const { urlParameters } = useUrlParams();
-  const [selected, setSelected] = useState([])
+  const { urlParameters, add } = useUrlParams();
+  const [selected, setSelected] = useState<{ id: any, label: string }>({ id: "", label: "" });
   const [pagination, setPagination] = useState({ page: 1, pageSize: 10, totalPages: 0 })
   const { academicYear, grade, class: section, schoolName, school } = urlParameters();
   const { getData, tableData, loading } = useTableData({ module: Modules.Performance, selectedDataStore: dataStoreData });
-  const { columns } = useHeader({ dataStoreData, programConfigData: programData as unknown as ProgramConfig, tableColumns: [], module: Modules.Performance });
   const [filterState, setFilterState] = useState<{ dataElements: any[], attributes: any[] }>({ attributes: [], dataElements: [] });
   const refetch = useRecoilValue(TableDataRefetch);
+  const { columns } = useHeader({ dataStoreData, programConfigData: programData as unknown as ProgramConfig, tableColumns: [], programStage: selected?.id });
 
   useEffect(() => {
-    setSelected([])
     void getData({
       page: pagination.page,
       pageSize: pagination.pageSize,
@@ -32,9 +40,10 @@ export default function Performance() {
       orgUnit: school!,
       baseProgramStage: dataStoreData?.registration?.programStage as string,
       attributeFilters: filterState.attributes,
-      dataElementFilters: filterState.dataElements
+      dataElementFilters: filterState.dataElements,
+      otherProgramStage: selected?.id
     })
-  }, [filterState, refetch, pagination.page, pagination.pageSize])
+  }, [filterState, refetch, pagination.page, pagination.pageSize, selected?.id])
 
   useEffect(() => {
     setPagination((prev) => ({ ...prev, totalPages: tableData.pagination.totalPages }))
@@ -49,6 +58,23 @@ export default function Performance() {
     setFilterState({ dataElements: filters, attributes: [] })
   }, [academicYear, grade, section])
 
+  function filterProgramStages(programData: any, filterData: any): FilteredStage[] {
+    return programData.programStages
+      .filter((stage: ProgramStage) =>
+        filterData.programStages.some((filterStage: { programStage: string }) => filterStage.programStage === stage.id)
+      )
+      .map((stage: ProgramStage) => ({
+        id: stage.id,
+        label: stage.displayName
+      }));
+  }
+
+  function addProgramStageToUrl(value: any) {
+    console.log(value)
+    add("programStage", value.id)
+  }
+
+  console.log(columns)
 
   return (
     <div style={{ height: "85vh" }}>
@@ -77,14 +103,12 @@ export default function Performance() {
               defaultFilterNumber={3}
               filterState={filterState}
               loading={loading}
-              rightElements={<EnrollmentActionsButtons selected={selected} filterState={filterState} selectedDataStoreKey={dataStoreData} programData={programData as unknown as ProgramConfig} />}
+              rightElements={<EnrollmentActionsButtons selectedDataStoreKey={dataStoreData} programData={programData as unknown as ProgramConfig} />}
               setFilterState={setFilterState}
-              selectable={true}
-              selected={selected}
-              setSelected={setSelected}
               pagination={pagination}
               setPagination={setPagination}
               paginate={!loading}
+              beforeSettings={<SwitchButtonView items={filterProgramStages(programData, dataStoreData.performance)} onSelect={addProgramStageToUrl} selected={selected} setSelected={setSelected} />}
             />
           </>
       }

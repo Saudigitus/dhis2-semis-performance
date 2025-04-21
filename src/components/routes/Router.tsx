@@ -4,12 +4,11 @@ import { FinalResult } from '../../pages';
 import { FullLayout } from '../../layout';
 
 export default function Router() {
-    console.log("Router")
     return (
         <HashRouter>
             <Routes>
                 <Route path='/' element={<FullLayout />}>
-                    <Route key={'final-result'} path={'/'} element={<FinalResult />} />
+                    <Route key={'performance'} path={'/'} element={<FinalResult />} />
                 </Route>
             </Routes>
         </HashRouter>
