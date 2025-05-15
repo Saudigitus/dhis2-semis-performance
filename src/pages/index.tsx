@@ -1,3 +1,3 @@
-import FinalResult from "./final-result/final-result";
+import FinalResult from "./performance/performance";
 
 export { FinalResult }
