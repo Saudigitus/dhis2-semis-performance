@@ -30,7 +30,7 @@ export default function Performance() {
   const [pagination, setPagination] = useState({ page: 1, pageSize: 10, totalPages: 0 })
   const [selected, setSelected] = useState<{ id: any, label: string }>({ id: "", label: "" });
   const { academicYear, grade, class: section, schoolName, school, programStage } = urlParameters();
-  const { getData, tableData, loading } = useTableData({ module: Modules.Performance, selectedDataStore: dataStoreData });
+  const { getData, tableData, loading } = useTableData({ module: Modules.Performance });
   const [filterState, setFilterState] = useState<{ dataElements: any[], attributes: any[] }>({ attributes: [], dataElements: [] });
   const { columns } = useHeader({ dataStoreData, programConfigData: programData as unknown as ProgramConfig, tableColumns: [], programStage: programStage! });
 
@@ -114,8 +114,8 @@ export default function Performance() {
               programConfig={programData}
               title="Performance"
               viewPortWidth={viewPortWidth}
-              columns={changeDataElementType({ headerRows: updatedVariables, dataElementIds })}
-              tableData={includeFields({ rowsData: tableData.data, headerRows: changeDataElementType({ headerRows: updatedVariables, dataElementIds }), mode: editionMode, dataElementIds, program: programData.id })}
+              columns={changeDataElementType({ headerRows: updatedVariables as any, dataElementIds })}
+              tableData={includeFields({ rowsData: tableData.data, headerRows: changeDataElementType({ headerRows: updatedVariables as any, dataElementIds }), mode: editionMode, dataElementIds, program: programData.id })}
               defaultFilterNumber={3}
               filterState={filterState}
               loading={loading}

@@ -1,2 +1,2 @@
-import FinalResult from './app/App'
-export { FinalResult }
+import Performance from './app/App'
+export { Performance }

@@ -4,7 +4,7 @@ import { InfoOutlined } from "@material-ui/icons";
 import styles from './showStats.module.css'
 import { Collapse } from "@mui/material";
 import { useState } from "react";
-import { useGetSectionTypeLabel, useHeader, useViewPortWidth } from "dhis2-semis-functions";
+import { useGetSectionTypeLabel, useHeader, useUrlParams, useViewPortWidth } from "dhis2-semis-functions";
 import { Modules, ProgramConfig, TableDataRefetch } from "dhis2-semis-types";
 import { useSetRecoilState } from "recoil";
 
@@ -15,7 +15,9 @@ export default function ShowStats({ stats, open, setOpen }: { setOpen: (args: bo
     const programsValues = useProgramsKeys();
     const programData = programsValues[0];
     const { viewPortWidth } = useViewPortWidth();
-    const { columns } = useHeader({ dataStoreData, programConfigData: programData as unknown as ProgramConfig, tableColumns: [] });
+    const { urlParameters } = useUrlParams()
+    const { programStage } = urlParameters()
+    const { columns } = useHeader({ dataStoreData, programConfigData: programData as unknown as ProgramConfig, tableColumns: [], programStage: programStage! });
     const setRefetch = useSetRecoilState(TableDataRefetch);
 
     return (
