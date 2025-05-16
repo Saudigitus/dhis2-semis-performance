@@ -6,7 +6,7 @@ import InitializeWrapper from '../wrapper/InitializeWrapper'
 
 const MyApp = () => {
     return (
-        <AppWrapper dataStoreKey='semis/values'>
+        <AppWrapper dataStoreKey='dataStore/semis/values'>
             <InitializeWrapper>
                 <Router />
             </InitializeWrapper>

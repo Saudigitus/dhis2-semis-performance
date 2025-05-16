@@ -32,7 +32,7 @@ export default function FieldsPerformance({ dataElements, value, otherProps, pro
                             {...otherProps}
                             key={updatedVariables[0].id}
                             style={{
-                                width: "100%",
+                                width: "150px",
                                 height: "100%",
                                 border: updatedVariables[0]?.error
                                     ? '1px solid red'

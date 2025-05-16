@@ -50,6 +50,7 @@ export default function Performance() {
   ] as string[];
 
   useEffect(() => {
+    runRulesEngine()
     void getData({
       orgUnit: school!,
       page: pagination.page,
@@ -60,7 +61,7 @@ export default function Performance() {
       dataElementFilters: [...filterState.dataElements, ...filters],
       baseProgramStage: dataStoreData?.registration?.programStage as string,
     })
-    runRulesEngine()
+
   }, [filterState, refetch, pagination.page, pagination.pageSize, programStage, school, section, grade, academicYear])
 
   useEffect(() => {
