@@ -1,13 +1,13 @@
 import React from 'react';
-import { Routes, Route, HashRouter } from 'react-router-dom';
 import { FinalResult } from '../../pages';
-import { FullLayout } from '../../layout';
+import { Routes, Route, HashRouter } from 'react-router-dom';
+import WithHeaderBarLayout from '../../layout/WithHeaderBarLayout';
 
 export default function Router() {
     return (
         <HashRouter>
             <Routes>
-                <Route path='/' element={<FullLayout />}>
+                <Route path='/' element={<WithHeaderBarLayout />}>
                     <Route key={'performance'} path={'/'} element={<FinalResult />} />
                 </Route>
             </Routes>

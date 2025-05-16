@@ -4,9 +4,9 @@ import { Router } from '../components/routes'
 import { AppWrapper } from 'dhis2-semis-components'
 import InitializeWrapper from '../wrapper/InitializeWrapper'
 
-const MyApp = () => {
+const Performance = () => {
     return (
-        <AppWrapper dataStoreKey='semis/values'>
+        <AppWrapper dataStoreKey='dataStore/semis/values'>
             <InitializeWrapper>
                 <Router />
             </InitializeWrapper>
@@ -14,4 +14,4 @@ const MyApp = () => {
     )
 }
 
-export default MyApp
+export default Performance
