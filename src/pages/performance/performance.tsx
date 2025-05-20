@@ -65,7 +65,7 @@ export default function Performance() {
   }, [filterState, refetch, pagination.page, pagination.pageSize, programStage, school, section, grade, academicYear])
 
   useEffect(() => {
-    setPagination((prev) => ({ ...prev, totalPages: tableData.pagination.totalPages }))
+    setPagination((prev: any) => ({ ...prev, totalPages: tableData.pagination.totalPages }))
   }, [tableData])
 
   useEffect(() => {
@@ -91,8 +91,6 @@ export default function Performance() {
     (item) => item.dataElement.id
   );
 
-  console.log(updatedVariables, "updatedVariables")
-
   return (
     <div style={{ height: "85vh" }}>
       {
@@ -115,8 +113,8 @@ export default function Performance() {
               programConfig={programData}
               title="Performance"
               viewPortWidth={viewPortWidth}
-              columns={changeDataElementType({ headerRows: updatedVariables as any, dataElementIds })}
-              tableData={includeFields({ rowsData: tableData.data, headerRows: changeDataElementType({ headerRows: updatedVariables as any, dataElementIds }), mode: editionMode, dataElementIds, program: programData.id })}
+              columns={changeDataElementType({ headerRows: updatedVariables as unknown as any, dataElementIds })}
+              tableData={includeFields({ rowsData: tableData.data, headerRows: changeDataElementType({ headerRows: updatedVariables as unknown as any, dataElementIds }), mode: editionMode, dataElementIds, program: programData.id })}
               defaultFilterNumber={3}
               filterState={filterState}
               loading={loading}
