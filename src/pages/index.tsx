@@ -1,3 +1,3 @@
-import FinalResult from "./performance/performance";
+import Performance from "./performance/performance";
 
-export { FinalResult }
+export { Performance }
