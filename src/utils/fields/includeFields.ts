@@ -51,7 +51,7 @@ export const includeFields = (props: IncludeFieldsProps) => {
             const immutableValue = row[id] == null ? "" : String(row[id]);
 
             // Conditionally update the field with a React element
-            if (type === "custom" && dataElementIds.includes(id) && mode) {
+            if (type === "custom" && dataElementIds?.includes(id) && mode) {
                 newRow[id] = React.createElement(FieldsPerformance, {
                     dataElements: { ...headerRow, value: immutableValue, name: id },
                     value: modifiedRowsData[i], // Pass the specific value, not the entire row

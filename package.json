@@ -28,6 +28,9 @@
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "copyfiles": "^2.4.1",
+    "dhis2-semis-components": "0.6.4-alpha.29",
+    "dhis2-semis-functions": "0.0.5-alpha.88",
+    "dhis2-semis-types": "1.3.13",
     "eslint": "^8.57.1",
     "eslint-config-standard-with-typescript": "^36.1.1",
     "eslint-plugin-import": "^2.27.5",
@@ -38,8 +41,9 @@
     "typescript": "^5.7.2"
   },
   "peerDependencies": {
-    "dhis2-semis-components": "^0.6.4-alpha.5",
-    "dhis2-semis-functions": "^0.0.5-alpha.86"
+    "dhis2-semis-components": "*",
+    "dhis2-semis-functions": "*",
+    "dhis2-semis-types": "*"
   },
   "dependencies": {
     "@dhis2/app-runtime": "^3.13.0",
@@ -52,9 +56,6 @@
     "bootstrap": "^5.3.3",
     "classnames": "^2.5.1",
     "date-fns": "2.29.3",
-    "dhis2-semis-components": "0.6.4-alpha.6",
-    "dhis2-semis-functions": "0.0.5-alpha.86",
-    "dhis2-semis-types": "^1.3.7",
     "lodash": "^4.17.21",
     "react-bootstrap": "^2.10.5",
     "react-final-form": "^6.5.9",
