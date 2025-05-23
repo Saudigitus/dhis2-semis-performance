@@ -1,8 +1,30 @@
-import { RulesEngine } from 'dhis2-semis-functions';
 import { useEffect, useState } from 'react';
+import { RulesEngine, useUrlParams } from 'dhis2-semis-functions';
+import useSaveMarks from '../../hooks/marks/useSaveMarks';
 import { FiAlertCircle, FiAlertTriangle } from 'react-icons/fi';
+import { formatMarksToSave } from '../../utils/marks/formatMarksToPost';
 
-export default function FieldsPerformance({ dataElements, value, otherProps, program }: { dataElements: any, value: any, otherProps: any, program: string }) {
+interface valueType extends Record<string, any> {
+    enrollmentId: "VswSZPzgX81"
+    orgUnitId: "Shc3qNhrPAz"
+    programId: "wQaiD2V27Dp"
+    programStageEvent: "Venko4keMtA"
+    status: "COMPLETED"
+    trackedEntity: "DWMd8vZUFVu"
+}
+
+type FieldsPerformancePros = {
+    dataElements: any,
+    value: valueType,
+    otherProps: any,
+    program: string
+}
+
+export default function FieldsPerformance(props: FieldsPerformancePros) {
+    const { dataElements, value, otherProps, program } = props;
+    const { saveMarks, error, loading, saved } = useSaveMarks()
+    const { urlParameters } = useUrlParams()
+    const { programStage } = urlParameters()
 
     const { runRulesEngine, updatedVariables } = RulesEngine({
         variables: [dataElements] as any,
@@ -11,17 +33,39 @@ export default function FieldsPerformance({ dataElements, value, otherProps, pro
         program: program
     })
 
+    const [newMark, setNewMark] = useState(updatedVariables[0].value)
+
+
     const handleChange = (e: any) => {
         const newValue = e.target.value
-        updatedVariables[dataElements.id] = newValue
+        setNewMark(newValue)
+        // updatedVariables[0].value = newValue
         runRulesEngine()
+    }
+
+    const handleBlur = async (e: any) => {
+        const marks = formatMarksToSave({
+            newMark: newMark,
+            dataElement: dataElements?.id,
+            event: {
+                orgUnit: value?.orgUnitId,
+                program: value?.programId,
+                programStage: programStage!,
+                enrollment: value?.enrollmentId,
+                event: value?.programStageEvent,
+                trackedEntity: value?.trackedEntity
+            },
+        })
+
+        if (newMark != updatedVariables[0].value) {
+            await saveMarks(marks)
+        }
     }
 
     useEffect(() => {
         runRulesEngine()
     }, [value])
 
-    const [first, setfirst] = useState()
     return (
         <>
             {updatedVariables[0]?.visible ?
@@ -30,6 +74,7 @@ export default function FieldsPerformance({ dataElements, value, otherProps, pro
                         <input type="number"
                             {...updatedVariables[0]}
                             {...otherProps}
+                            value={newMark}
                             key={updatedVariables[0].id}
                             style={{
                                 width: "150px",
@@ -46,10 +91,13 @@ export default function FieldsPerformance({ dataElements, value, otherProps, pro
                                 backgroundColor: "#fff",
                                 transition: "border-color 0.3s ease, box-shadow 0.3s ease",
                                 outline: "none",
+                                cursor: updatedVariables[0]?.disabled ? "not-allowed" : "default"
 
                             }}
                             onChange={handleChange}
+                            onBlur={handleBlur}
                             min="18" max="99"
+
                         />
                         {updatedVariables[0]?.error && (
                             <FiAlertCircle
