@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
-import { Button, ButtonStrip, IconAddCircle24, IconUserGroup16 } from "@dhis2/ui";
-import styles from './enrollmentActionsButtons.module.css'
-import { useGetSectionTypeLabel, useUrlParams } from 'dhis2-semis-functions';
-import { ProgramConfig, selectedDataStoreKey } from 'dhis2-semis-types'
-import { DataExporter, DataImporter, CustomDropdown as DropdownButton } from 'dhis2-semis-components';
+import { Form } from 'react-final-form';
 import ShowStats from '../stats/showStats';
 import { Tooltip } from '@material-ui/core';
-import { Form } from 'react-final-form';
+import { useConfig } from '@dhis2/app-runtime';
+import styles from './enrollmentActionsButtons.module.css'
+import { Button, ButtonStrip, IconUserGroup16 } from "@dhis2/ui";
+import { ProgramConfig, selectedDataStoreKey } from 'dhis2-semis-types'
+import { useGetSectionTypeLabel, useUrlParams } from 'dhis2-semis-functions';
+import { DataExporter, DataImporter, CustomDropdown as DropdownButton } from 'dhis2-semis-components';
 
 function EnrollmentActionsButtons({ programData, selectedDataStoreKey, setEditionMode, editionMode }: { programData: ProgramConfig, selectedDataStoreKey: selectedDataStoreKey, setEditionMode: (editionMode: boolean) => void, editionMode: boolean }) {
+    const { baseUrl } = useConfig()
     const { urlParameters } = useUrlParams();
     const { school: orgUnit, class: section, grade, academicYear, schoolName } = urlParameters();
     const { sectionName } = useGetSectionTypeLabel();
@@ -18,7 +20,7 @@ function EnrollmentActionsButtons({ programData, selectedDataStoreKey, setEditio
     const enrollmentOptions: any = [
         {
             label: <DataImporter
-                baseURL='http://localhost:8080'
+                baseURL={baseUrl}
                 label={'Bulk Performance'}
                 module='performance'
                 onError={(e: any) => { console.log(e) }}
@@ -27,7 +29,7 @@ function EnrollmentActionsButtons({ programData, selectedDataStoreKey, setEditio
                 selectedSectionDataStore={selectedDataStoreKey}
                 updating={false}
                 title={"Bulk Performance"}
-                
+
             />,
             divider: true,
             disabled: false,
@@ -35,7 +37,7 @@ function EnrollmentActionsButtons({ programData, selectedDataStoreKey, setEditio
         {
             label: <DataExporter
                 Form={Form}
-                baseURL='http://localhost:8080'
+                baseURL={baseUrl}
                 eventFilters={[
                     ...(academicYear ? [`${selectedDataStoreKey.registration.academicYear}:in:${academicYear}`] : []),
                     ...(grade ? [`${selectedDataStoreKey.registration.grade}:in:${grade}`] : []),

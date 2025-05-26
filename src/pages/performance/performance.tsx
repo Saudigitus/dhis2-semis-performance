@@ -39,6 +39,21 @@ export default function Performance() {
     program: program?.id as string,
   })
 
+
+  useEffect(() => {
+    if (programStage) {
+      const selectedStage = program?.programStages?.find((stage) => stage.id === programStage);
+      if (selectedStage) {
+        setSelected({ id: selectedStage.id, label: selectedStage.displayName });
+      } else {
+        setSelected({ id: "", label: "" });
+      }
+    } else {
+      setSelected({ id: "", label: "" });
+    }
+
+  }, [programStage])
+
   const termSelected = program?.programStages?.find((stage) => stage.id === programStage)
 
   useEffect(() => {
@@ -111,7 +126,10 @@ export default function Performance() {
               title="Performance"
               viewPortWidth={viewPortWidth}
               columns={changeDataElementType({ headerRows: updatedVariables as unknown as any, dataElementIds })}
-              tableData={includeFields({ rowsData: tableData.data, headerRows: changeDataElementType({ headerRows: updatedVariables as unknown as any, dataElementIds }), mode: editionMode, dataElementIds, program: program!.id })}
+              tableData={includeFields({
+                rowsData: tableData.data, mode: editionMode, dataElementIds, program: program!.id,
+                headerRows: changeDataElementType({ headerRows: updatedVariables as unknown as any, dataElementIds }),
+              })}
               defaultFilterNumber={5}
               filterState={filterState}
               loading={loading}
