@@ -3,14 +3,15 @@ import { RulesEngine, useUrlParams } from 'dhis2-semis-functions';
 import useSaveMarks from '../../hooks/marks/useSaveMarks';
 import { FiAlertCircle, FiAlertTriangle } from 'react-icons/fi';
 import { formatMarksToSave } from '../../utils/marks/formatMarksToPost';
+import { EnrollmentStatus } from 'dhis2-semis-types';
 
 interface valueType extends Record<string, any> {
-    enrollmentId: "VswSZPzgX81"
-    orgUnitId: "Shc3qNhrPAz"
-    programId: "wQaiD2V27Dp"
-    programStageEvent: "Venko4keMtA"
-    status: "COMPLETED"
-    trackedEntity: "DWMd8vZUFVu"
+    enrollmentId: string
+    orgUnitId: string
+    programId: string
+    programStageEvent: string
+    status: EnrollmentStatus
+    trackedEntity: string
 }
 
 type FieldsPerformancePros = {
