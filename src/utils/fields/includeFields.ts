@@ -62,7 +62,7 @@ export const includeFields = (props: IncludeFieldsProps) => {
                     value: modifiedRowsData[i] as any, // Pass the specific value, not the entire row
                     otherProps: otherProps,
                     // handleChange, error, and warning would typically be passed from a parent component
-                    program: program
+                    program: program,
                 });
             }
         });
