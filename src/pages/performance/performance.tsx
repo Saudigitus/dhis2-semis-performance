@@ -39,6 +39,21 @@ export default function Performance() {
     program: program?.id as string,
   })
 
+
+  useEffect(() => {
+    if (programStage) {
+      const selectedStage = program?.programStages?.find((stage) => stage.id === programStage);
+      if (selectedStage) {
+        setSelected({ id: selectedStage.id, label: selectedStage.displayName });
+      } else {
+        setSelected({ id: "", label: "" });
+      }
+    } else {
+      setSelected({ id: "", label: "" });
+    }
+
+  }, [programStage])
+
   const termSelected = program?.programStages?.find((stage) => stage.id === programStage)
 
   useEffect(() => {
