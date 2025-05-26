@@ -1,5 +1,5 @@
 import { cloneDeep } from 'lodash';
-import FieldsPerformance from '../../components/assingFinalResult/FieldsPerformance';
+import FieldsPerformance from '../../components/marks/FieldsPerformance';
 import React from 'react';
 import { EnrollmentStatus } from 'dhis2-semis-types';
 
