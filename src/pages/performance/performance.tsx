@@ -126,7 +126,10 @@ export default function Performance() {
               title="Performance"
               viewPortWidth={viewPortWidth}
               columns={changeDataElementType({ headerRows: updatedVariables as unknown as any, dataElementIds })}
-              tableData={includeFields({ rowsData: tableData.data, headerRows: changeDataElementType({ headerRows: updatedVariables as unknown as any, dataElementIds }), mode: editionMode, dataElementIds, program: program!.id })}
+              tableData={includeFields({
+                rowsData: tableData.data, mode: editionMode, dataElementIds, program: program!.id,
+                headerRows: changeDataElementType({ headerRows: updatedVariables as unknown as any, dataElementIds }),
+              })}
               defaultFilterNumber={5}
               filterState={filterState}
               loading={loading}

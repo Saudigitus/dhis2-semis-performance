@@ -1,5 +1,5 @@
 import { cloneDeep } from 'lodash';
-import FieldsPerformance from '../../components/assingFinalResult/FieldsPerformance';
+import FieldsPerformance from '../../components/marks/FieldsPerformance';
 import React from 'react';
 import { EnrollmentStatus } from 'dhis2-semis-types';
 
@@ -62,7 +62,7 @@ export const includeFields = (props: IncludeFieldsProps) => {
                     value: modifiedRowsData[i] as any, // Pass the specific value, not the entire row
                     otherProps: otherProps,
                     // handleChange, error, and warning would typically be passed from a parent component
-                    program: program
+                    program: program,
                 });
             }
         });
