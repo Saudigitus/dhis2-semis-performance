@@ -103,6 +103,11 @@ export default function Performance() {
     (item) => item.dataElement.id
   );
 
+  console.log("marks", includeFields({
+    rowsData: tableData.data, mode: editionMode, dataElementIds, program: program!.id,
+    headerRows: changeDataElementType({ headerRows: updatedVariables as unknown as any, dataElementIds }),
+  }), tableData.data)
+
   return (
     <div style={{ height: "85vh" }}>
       {
