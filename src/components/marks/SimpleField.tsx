@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiAlertCircle, FiAlertTriangle, FiLoader } from 'react-icons/fi';
+import { FiAlertCircle, FiAlertTriangle, FiCheckCircle, FiLoader } from 'react-icons/fi';
 
 type SimpleFieldProps = {
     field: any
@@ -39,11 +39,11 @@ export default function SimpleField(props: SimpleFieldProps) {
                         width: "150px",
                         height: "100%",
                         border: error
-                            ? '1px solid red'
+                            ? '2px solid red'
                             : warning
-                                ? '1px solid orange'
+                                ? '2px solid orange'
                                 : success
-                                    ? '1px solid green'
+                                    ? '2px solid green'
                                     : '1px solid #ccc',
                         color: "#333",
                         outline: "none",
@@ -72,6 +72,19 @@ export default function SimpleField(props: SimpleFieldProps) {
                     :
                     (
                         <>
+                            {success && (
+                                <FiCheckCircle
+                                    color="green"
+                                    size={20}
+                                    style={{
+                                        position: 'absolute',
+                                        right: 8,
+                                        top: '50%',
+                                        transform: 'translateY(-50%)'
+                                    }}
+                                    title={content}
+                                />
+                            )}
                             {error && (
                                 <FiAlertCircle
                                     color="red"
