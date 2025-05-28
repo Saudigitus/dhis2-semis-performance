@@ -63,6 +63,7 @@ export const includeFields = (props: IncludeFieldsProps) => {
                     otherProps: otherProps,
                     // handleChange, error, and warning would typically be passed from a parent component
                     program: program,
+                    originalData: rowsData[i],
                 });
             }
         });

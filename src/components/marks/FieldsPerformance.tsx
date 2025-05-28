@@ -19,12 +19,13 @@ type FieldsPerformancePros = {
     value: valueType,
     otherProps: any,
     program: string
+    originalData: any
 }
 
 export default function FieldsPerformance(props: FieldsPerformancePros) {
     const { urlParameters } = useUrlParams()
     const { programStage } = urlParameters()
-    const { dataElements, value, otherProps, program } = props;
+    const { dataElements, value, otherProps, program, originalData } = props;
     const { saveMarks, error, loading, success } = useSaveMarks()
     const { runRulesEngine, updatedVariables } = RulesEngine({
         values: value, program: program, type: "programStage", variables: [dataElements] as any,
@@ -56,7 +57,18 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
         })
 
         if (newMark != updatedVariables[0].value) {
-            await saveMarks(marks).then(() => { updatedVariables[0].value = newMark })
+            await saveMarks(marks)
+                .then(() => {
+                    // Update the original data with the new mark
+                    updatedVariables[0].value = newMark;
+                    originalData[dataElements.id] = newMark;
+                })
+                .catch((err) => {
+                    setTimeout(() => {
+                        setNewMark(updatedVariables[0].value);
+                        originalData[dataElements.id] = updatedVariables[0].value;
+                    }, 3000)
+                })
         }
     }
 

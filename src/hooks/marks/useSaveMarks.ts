@@ -27,10 +27,10 @@ export default function useSaveMarks() {
                 setData(resp);
                 setSuccess(true);
                 setLoading(false);
-                show({
-                    message: "Marks saved successfully",
-                    type: { success: true }
-                });
+                // show({
+                //     message: "Marks saved successfully",
+                //     type: { success: true }
+                // });
                 setTimeout(() => { hide; setSuccess(false) }, 3000);
             }),
             onError: ((error) => {
