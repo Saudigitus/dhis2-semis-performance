@@ -26,9 +26,11 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
     const { urlParameters } = useUrlParams()
     const { programStage } = urlParameters()
     const { dataElements, value, otherProps, program, originalData } = props;
+    const [values, setValues] = useState({ ...value })
+
     const { saveMarks, error, loading, success } = useSaveMarks()
     const { runRulesEngine, updatedVariables } = RulesEngine({
-        values: value, program: program, type: "programStage", variables: [dataElements] as any,
+        values: values, program: program, type: "programStage", variables: [dataElements] as any,
     })
     const [newMark, setNewMark] = useState(updatedVariables[0].value)
 
@@ -39,6 +41,13 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
     const handleChange = (e: any) => {
         const newValue = e.target.value
         setNewMark(newValue)
+
+        // Update the values in the state
+        setValues((prevValues) => ({
+            ...prevValues,
+            [dataElements.id]: newValue
+        }))
+
         runRulesEngine()
     }
 
@@ -56,7 +65,7 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
             },
         })
 
-        if (newMark != updatedVariables[0].value) {
+        if (newMark != updatedVariables[0].value && !updatedVariables[0].error) {
             await saveMarks(marks)
                 .then(() => {
                     // Update the original data with the new mark
