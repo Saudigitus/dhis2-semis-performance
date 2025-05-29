@@ -1,14 +1,14 @@
 import React from 'react'
 import './App.module.css'
 import { Router } from '../components/routes'
-import InitializeWrapper from '../wrapper/InitializeWrapper'
+// import InitializeWrapper from '../wrapper/InitializeWrapper'
 
 const Performance = () => {
 
     return (
-        <InitializeWrapper>
+        // <InitializeWrapper>
             <Router />
-        </InitializeWrapper>
+        // </InitializeWrapper>
     )
 }
 
