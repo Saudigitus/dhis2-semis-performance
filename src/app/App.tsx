@@ -9,6 +9,10 @@ import { HashRouter } from 'react-router-dom'
 const Performance = () => {
     const { baseUrl } = useConfig()
 
+    if (import.meta.env.MODE === 'production') {
+        return <Router />
+    }
+
     return (
         <AppWrapper
             baseUrl={baseUrl}

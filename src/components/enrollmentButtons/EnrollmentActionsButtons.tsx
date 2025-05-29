@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Form } from 'react-final-form';
 import ShowStats from '../stats/showStats';
-import { Tooltip } from '@material-ui/core';
+import { Tooltip } from '@mui/material';
 import { useConfig } from '@dhis2/app-runtime';
 import styles from './enrollmentActionsButtons.module.css'
 import { Button, ButtonStrip, IconUserGroup16 } from "@dhis2/ui";
