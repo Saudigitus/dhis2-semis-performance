@@ -26,11 +26,11 @@ export default function Performance() {
   const refetch = useRecoilValue(TableDataRefetch);
   const [editionMode, setEditionMode] = useState(false)
   const [pagination, setPagination] = useState({ page: 1, pageSize: 10, totalPages: 0, totalElements: 0 })
-  const [selected, setSelected] = useState<{ id: any, label: string }>({ id: "", label: "" });
+  const [selected, setSelected] = useState<{ id: any, label: string }>({ id: dataStoreData.performance?.programStages?.[0].programStage, label: "" });
   const { academicYear, grade, class: section, schoolName, school, programStage } = urlParameters();
   const { getData, tableData, loading } = useTableData({ module: Modules.Performance });
   const [filterState, setFilterState] = useState<{ dataElements: any[], attributes: any[] }>({ attributes: [], dataElements: [] });
-  const { columns } = useHeader({ dataStoreData, programConfigData: program as unknown as ProgramConfig, tableColumns: [], programStage: programStage! });
+  const { columns } = useHeader({ dataStoreData, programConfigData: program as unknown as ProgramConfig, tableColumns: [], programStage: selected.id! });
 
   const { runRulesEngine, updatedVariables } = RulesEngine({
     variables: columns ?? [] as any,
@@ -39,6 +39,11 @@ export default function Performance() {
     program: program?.id as string,
   })
 
+  useEffect(() => {
+    if (!programStage && selected?.id) {
+      add("programStage", selected?.id)
+    }
+  }, [selected?.id])
 
   useEffect(() => {
     if (programStage) {
@@ -102,11 +107,6 @@ export default function Performance() {
   const dataElementIds: any = termSelected?.programStageDataElements.map(
     (item) => item.dataElement.id
   );
-
-  console.log("marks", includeFields({
-    rowsData: tableData.data, mode: editionMode, dataElementIds, program: program!.id,
-    headerRows: changeDataElementType({ headerRows: updatedVariables as unknown as any, dataElementIds }),
-  }), tableData.data)
 
   return (
     <div style={{ height: "85vh" }}>

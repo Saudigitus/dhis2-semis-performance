@@ -5,6 +5,10 @@ import { Router } from '../components/routes'
 
 const Performance = () => {
 
+    if (import.meta.env.MODE === 'production') {
+        return <Router />
+    }
+
     return (
         // <InitializeWrapper>
             <Router />
