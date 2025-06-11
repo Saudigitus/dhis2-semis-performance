@@ -40,10 +40,10 @@ export default function Performance() {
   })
 
   useEffect(() => {
-    if (!programStage && selected?.id) {
-      add("programStage", selected?.id)
+    if (!programStage ) {
+      add("programStage", dataStoreData.performance?.programStages?.[0].programStage || "");
     }
-  }, [selected?.id])
+  }, [programStage])
 
   useEffect(() => {
     if (programStage) {
