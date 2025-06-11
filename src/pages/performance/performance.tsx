@@ -43,7 +43,7 @@ export default function Performance() {
     if (!programStage ) {
       add("programStage", dataStoreData.performance?.programStages?.[0].programStage || "");
     }
-  }, [])
+  }, [programStage])
 
   useEffect(() => {
     if (programStage) {

@@ -65,7 +65,7 @@ function EnrollmentActionsButtons({ programData, selectedDataStoreKey, setEditio
                 <Tooltip title={orgUnit === null ? "Please select an organisation unit before" : ""}>
                     <Button onClick={() => setEditionMode(!editionMode)}
                     >
-                        <span>{editionMode ? "Disable Edition Mode" : "Allow Edition Mode"}</span>
+                        <span>{editionMode ? "Disable Edition Mode" : "Allow Edit Mode"}</span>
                     </Button >
                 </Tooltip>
 
