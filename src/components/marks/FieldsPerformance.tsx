@@ -1,5 +1,5 @@
 import SimpleField from './SimpleField';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { EnrollmentStatus } from 'dhis2-semis-types';
 import useSaveMarks from '../../hooks/marks/useSaveMarks';
 import { RulesEngine, useUrlParams } from 'dhis2-semis-functions';
@@ -29,13 +29,17 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
     const [values, setValues] = useState({ ...value })
 
     const { saveMarks, error, loading, success } = useSaveMarks()
+
+    const memoizedValues = useMemo(() => values, [JSON.stringify(values)]);
+
     const { runRulesEngine, updatedVariables } = RulesEngine({
-        values: values, program: program, type: "programStage", variables: [dataElements] as any,
+        values: memoizedValues, program: program, type: "programStage", variables: [dataElements] as any,
     })
+
     const [newMark, setNewMark] = useState(updatedVariables[0].value)
 
     useEffect(() => {
-        runRulesEngine()
+        runRulesEngine({})
     }, [value, newMark])
 
     const handleChange = (e: any) => {
@@ -48,7 +52,7 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
             [dataElements.id]: newValue
         }))
 
-        runRulesEngine()
+        runRulesEngine({})
     }
 
     const handleBlur = async (e: any) => {
