@@ -1,6 +1,6 @@
 {
   "name": "dhis2-semis-performance",
-  "version": "1.0.0-alpha.15",
+  "version": "1.0.0-alpha.16",
   "description": "",
   "license": "BSD-3-Clause",
   "private": false,
@@ -24,7 +24,10 @@
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@dhis2/app-adapter": "12.6.0",
+    "@dhis2/app-runtime": "3.14.1",
     "@dhis2/cli-app-scripts": "^12.3.0",
+    "@dhis2/ui": "10.7.2",
+    "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "7.1.0",
     "@mui/material": "7.1.0",
@@ -42,12 +45,9 @@
     "eslint-plugin-n": "^16.6.2",
     "eslint-plugin-promise": "^6.6.0",
     "eslint-plugin-react": "^7.32.2",
+    "recoil": "^0.7.7",
     "rimraf": "^6.0.1",
-    "typescript": "^5.7.2",
-    "@dhis2/app-runtime": "3.14.1",
-    "@dhis2/ui": "10.7.2",
-    "@emotion/react": "^11.14.0",
-    "recoil": "^0.7.7"
+    "typescript": "^5.7.2"
   },
   "peerDependencies": {
     "@dhis2/app-adapter": "12.6.0",
