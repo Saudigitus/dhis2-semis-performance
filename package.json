@@ -19,7 +19,7 @@
     "test": "d2-app-scripts test",
     "deploy": "d2-app-scripts deploy",
     "copy-files": "copyfiles -u 1 src/**/*.png src/**/*.svg src/**/*.css dist/",
-    "lib": "cross-env SEMIS_BUILD_MODE=lib rimraf ./dist && npx tsc -b && yarn copy-files --mode lib"
+    "lib": "rimraf ./dist && npx tsc -b && yarn copy-files"
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
