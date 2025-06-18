@@ -6,16 +6,22 @@ import { useConfig } from '@dhis2/app-runtime';
 import styles from './enrollmentActionsButtons.module.css'
 import { Button, ButtonStrip, IconUserGroup16 } from "@dhis2/ui";
 import { ProgramConfig, selectedDataStoreKey } from 'dhis2-semis-types'
-import { useGetSectionTypeLabel, useUrlParams } from 'dhis2-semis-functions';
+import { useGetSectionTypeLabel, useShowAlerts, useUrlParams } from 'dhis2-semis-functions';
 import { DataExporter, DataImporter, CustomDropdown as DropdownButton } from 'dhis2-semis-components';
 
 function EnrollmentActionsButtons({ programData, selectedDataStoreKey, setEditionMode, editionMode }: { programData: ProgramConfig, selectedDataStoreKey: selectedDataStoreKey, setEditionMode: (editionMode: boolean) => void, editionMode: boolean }) {
     const { baseUrl } = useConfig()
     const { urlParameters } = useUrlParams();
-    const { school: orgUnit, class: section, grade, academicYear, schoolName } = urlParameters();
+    const { school: orgUnit, class: section, grade, academicYear } = urlParameters();
     const { sectionName } = useGetSectionTypeLabel();
     const [stats, setStats] = useState<{ posted: number, conflicts: any[] }>({ posted: 0, conflicts: [] })
     const [open, setOpen] = useState<boolean>(false)
+    const { hide, show } = useShowAlerts()
+
+    const showAlert = (error: any) => {
+        show({ message: `Unknown error: ${error}`, type: { critical: true } })
+        setTimeout(hide, 5000);
+    }
 
     const enrollmentOptions: any = [
         {
@@ -23,7 +29,7 @@ function EnrollmentActionsButtons({ programData, selectedDataStoreKey, setEditio
                 baseURL={baseUrl}
                 label={'Bulk Performance'}
                 module='performance'
-                onError={(e: any) => { console.log(e) }}
+                onError={(e: any) => { showAlert(e) }}
                 programConfig={programData}
                 sectionType={sectionName}
                 selectedSectionDataStore={selectedDataStoreKey}
@@ -43,10 +49,9 @@ function EnrollmentActionsButtons({ programData, selectedDataStoreKey, setEditio
                     ...(grade ? [`${selectedDataStoreKey.registration.grade}:in:${grade}`] : []),
                     ...(section ? [`${selectedDataStoreKey.registration.section}:in:${section}`] : []),
                 ]}
-                fileName={`${schoolName}-${grade}-${section}-Performance`}
                 label='Export students performace'
                 module='performance'
-                onError={(e: any) => console.log(e)}
+                onError={(e: any) => { showAlert(e) }}
                 programConfig={programData}
                 sectionType={sectionName}
                 selectedSectionDataStore={selectedDataStoreKey}
@@ -69,12 +74,17 @@ function EnrollmentActionsButtons({ programData, selectedDataStoreKey, setEditio
                     </Button >
                 </Tooltip>
 
-                <DropdownButton
-                    name={<span className={styles.work_buttons_text}>Bulk Performance</span> as unknown as string}
-                    disabled={!!(orgUnit == undefined || section == undefined || grade == undefined || academicYear == undefined)}
-                    icon={<IconUserGroup16 />}
-                    options={enrollmentOptions}
-                />
+                <Tooltip title={(section === null || grade === null || academicYear == undefined) ? "Please select section and grade" : ""} >
+                    <span>
+                        <DropdownButton
+                            name={<span className={styles.work_buttons_text}>Bulk Performance</span> as unknown as string}
+                            disabled={!!(orgUnit == undefined || section == undefined || grade == undefined || academicYear == undefined)}
+                            icon={<IconUserGroup16 />}
+                            options={enrollmentOptions}
+                        />
+                    </span>
+                </Tooltip>
+
             </ButtonStrip>
         </div>
     )
