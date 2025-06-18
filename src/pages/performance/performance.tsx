@@ -1,6 +1,6 @@
 import { useRecoilValue } from 'recoil';
 import { ProgramConfig } from 'dhis2-semis-types'
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { TableDataRefetch, Modules } from "dhis2-semis-types"
 import { InfoPage, SwitchButtonView } from 'dhis2-semis-components'
 import { Table } from "dhis2-semis-components";
@@ -30,11 +30,14 @@ export default function Performance() {
   const { academicYear, grade, class: section, schoolName, school, programStage } = urlParameters();
   const { getData, tableData, loading } = useTableData({ module: Modules.Performance });
   const [filterState, setFilterState] = useState<{ dataElements: any[], attributes: any[] }>({ attributes: [], dataElements: [] });
-  const { columns } = useHeader({ dataStoreData, programConfigData: program as unknown as ProgramConfig, tableColumns: [], programStage: selected.id! });
+  const { columns } = useHeader({ dataStoreData, programConfigData: program as unknown as ProgramConfig, programStage: selected.id! });
+  const values = { [dataStoreData.registration.grade]: grade }
+
+  const memoizedValues = useMemo(() => values, [JSON.stringify(values)]);
 
   const { runRulesEngine, updatedVariables } = RulesEngine({
     variables: columns ?? [] as any,
-    values: { [dataStoreData.registration.grade]: grade },
+    values: memoizedValues,
     type: "programStage",
     program: program?.id as string,
   })
@@ -62,7 +65,7 @@ export default function Performance() {
   const termSelected = program?.programStages?.find((stage) => stage.id === programStage)
 
   useEffect(() => {
-    runRulesEngine()
+    runRulesEngine({})
 
     void getData({
       orgUnit: school!,
@@ -71,6 +74,7 @@ export default function Performance() {
       otherProgramStage: programStage!,
       program: program?.id as string,
       attributeFilters: filterState.attributes,
+      order: dataStoreData?.defaults.defaultOrder,
       dataElementFilters: [
         academicYear !== null ? `${dataStoreData.registration.academicYear}:in:${academicYear}` : null,
         grade !== null ? `${dataStoreData.registration.grade}:in:${grade}` : null,
