@@ -4,10 +4,11 @@ import ShowStats from '../stats/showStats';
 import { Tooltip } from '@mui/material';
 import { useConfig } from '@dhis2/app-runtime';
 import styles from './enrollmentActionsButtons.module.css'
-import { Button, ButtonStrip, IconUserGroup16 } from "@dhis2/ui";
+import { Button, ButtonStrip, IconUserGroup16, IconEdit24 } from "@dhis2/ui";
 import { ProgramConfig, selectedDataStoreKey } from 'dhis2-semis-types'
 import { useGetSectionTypeLabel, useShowAlerts, useUrlParams } from 'dhis2-semis-functions';
 import { DataExporter, DataImporter, CustomDropdown as DropdownButton } from 'dhis2-semis-components';
+import EditOffIcon from '@mui/icons-material/EditOff';
 
 function EnrollmentActionsButtons({ programData, selectedDataStoreKey, setEditionMode, editionMode }: { programData: ProgramConfig, selectedDataStoreKey: selectedDataStoreKey, setEditionMode: (editionMode: boolean) => void, editionMode: boolean }) {
     const { baseUrl } = useConfig()
@@ -68,7 +69,9 @@ function EnrollmentActionsButtons({ programData, selectedDataStoreKey, setEditio
             <ButtonStrip className={styles.work_buttons}>
 
                 <Tooltip title={orgUnit === null ? "Please select an organisation unit before" : ""}>
-                    <Button onClick={() => setEditionMode(!editionMode)}
+                    <Button
+                        onClick={() => setEditionMode(!editionMode)}
+                        icon={editionMode ? <EditOffIcon /> : <IconEdit24 />}
                     >
                         <span>{editionMode ? "Disable Edition Mode" : "Allow Edit Mode"}</span>
                     </Button >

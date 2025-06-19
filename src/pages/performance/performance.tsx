@@ -25,7 +25,7 @@ export default function Performance() {
   const { urlParameters, add } = useUrlParams();
   const refetch = useRecoilValue(TableDataRefetch);
   const [editionMode, setEditionMode] = useState(false)
-  const [pagination, setPagination] = useState({ page: 1, pageSize: 10, totalPages: 0, totalElements: 0 })
+  const [pagination, setPagination] = useState({ page: 1, pageSize: 50, totalPages: 0, totalElements: 0 })
   const [selected, setSelected] = useState<{ id: any, label: string }>({ id: dataStoreData.performance?.programStages?.[0].programStage, label: "" });
   const { academicYear, grade, class: section, schoolName, school, programStage } = urlParameters();
   const { getData, tableData, loading } = useTableData({ module: Modules.Performance });
