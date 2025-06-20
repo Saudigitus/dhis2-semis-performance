@@ -31,9 +31,10 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
     const { saveMarks, error, loading, success } = useSaveMarks()
 
     const memoizedValues = useMemo(() => values, [JSON.stringify(values)]);
+    const memoizedDataElements = useMemo(() => [dataElements], [JSON.stringify(dataElements)]);
 
     const { runRulesEngine, updatedVariables } = RulesEngine({
-        values: memoizedValues, program: program, type: "programStage", variables: [dataElements] as any,
+        values: memoizedValues, program: program, type: "programStage", variables: memoizedDataElements as any,
     })
 
     const [newMark, setNewMark] = useState(updatedVariables[0].value)
