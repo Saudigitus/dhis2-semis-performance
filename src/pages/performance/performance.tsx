@@ -142,7 +142,7 @@ export default function Performance() {
               defaultFilterNumber={5}
               filterState={filterState}
               loading={loading}
-              rightElements={<EnrollmentActionsButtons setEditionMode={setEditionMode} editionMode={editionMode} selectedDataStoreKey={dataStoreData} programData={program as unknown as ProgramConfig} />}
+              rightElements={<EnrollmentActionsButtons setEditionMode={setEditionMode} editionMode={editionMode}/>}
               setFilterState={setFilterState}
               pagination={pagination}
               setPagination={setPagination}
