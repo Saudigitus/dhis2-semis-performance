@@ -8,7 +8,7 @@ import { Button, ButtonStrip, IconUserGroup16, IconEdit24 } from "@dhis2/ui";
 import { useCheckFilters, useGetSectionTypeLabel, useShowAlerts, useUrlParams } from 'dhis2-semis-functions';
 import { DataExporter, DataImporter, CustomDropdown as DropdownButton } from 'dhis2-semis-components';
 import EditOffIcon from '@mui/icons-material/EditOff';
-import useGetSelectedKeys from 'src/hooks/config/useGetSelectedKeys';
+import useGetSelectedKeys from '../../hooks/config/useGetSelectedKeys';
 
 function EnrollmentActionsButtons({ setEditionMode, editionMode }: { setEditionMode: (editionMode: boolean) => void, editionMode: boolean }) {
     const { baseUrl } = useConfig()
