@@ -37,7 +37,7 @@ function EnrollmentActionsButtons({ setEditionMode, editionMode }: { setEditionM
                 sectionType={sectionName}
                 selectedSectionDataStore={selectedDataStoreKey}
                 updating={false}
-                title={"Bulk Performance"}
+                title={"Import Performance"}
 
             />,
             divider: true,
@@ -79,7 +79,7 @@ function EnrollmentActionsButtons({ setEditionMode, editionMode }: { setEditionM
                     </Button >
                 </Tooltip>
 
-                <Tooltip title={(section === null || grade === null || academicYear == undefined) ? "Please select section and grade" : ""} >
+                <Tooltip title={!areAllSelected() ? "Please select all filters" : ""} >
                     <span>
                         <DropdownButton
                             name={<span className={styles.work_buttons_text}>Bulk Performance</span> as unknown as string}

@@ -61,7 +61,7 @@ export default function SimpleField(props: SimpleFieldProps) {
                     onChange={handleChange}
                     disabled={disabled}
                     style={{
-                        width: '100%',
+                        width: '100px',
                         paddingRight: '2.2rem',
                         border: `2px solid ${borderColor}`,
                         color: "#333",
