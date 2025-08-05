@@ -6,7 +6,7 @@ import { useConfig } from '@dhis2/app-runtime';
 import styles from './enrollmentActionsButtons.module.css'
 import { Button, ButtonStrip, IconUserGroup16, IconEdit24 } from "@dhis2/ui";
 import { useCheckFilters, useGetSectionTypeLabel, useShowAlerts, useUrlParams } from 'dhis2-semis-functions';
-import { DataExporter, DataImporter, CustomDropdown as DropdownButton } from 'dhis2-semis-components';
+import { DataExporter, DataImporter, CustomDropdown as DropdownButton, useSchoolCalendar } from 'dhis2-semis-components';
 import EditOffIcon from '@mui/icons-material/EditOff';
 import useGetSelectedKeys from '../../hooks/config/useGetSelectedKeys';
 
@@ -20,6 +20,7 @@ function EnrollmentActionsButtons({ setEditionMode, editionMode }: { setEditionM
     const { dataStoreData: selectedDataStoreKey, program: programData } = useGetSelectedKeys()
     const { hide, show } = useShowAlerts()
     const { areAllSelected } = useCheckFilters({ filters: (selectedDataStoreKey.filters.dataElements ?? []) as unknown as any })
+    const { academicYear: academicYearId } = useSchoolCalendar()
 
     const showAlert = (error: any) => {
         show({ message: `Unknown error: ${error}`, type: { critical: true } })
@@ -48,7 +49,7 @@ function EnrollmentActionsButtons({ setEditionMode, editionMode }: { setEditionM
                 Form={Form}
                 baseURL={baseUrl}
                 eventFilters={[
-                    ...(academicYear ? [`${selectedDataStoreKey.registration.academicYear}:in:${academicYear}`] : []),
+                    ...(academicYear ? [`${academicYearId}:in:${academicYear}`] : []),
                     ...(grade ? [`${selectedDataStoreKey.registration.grade}:in:${grade}`] : []),
                     ...(section ? [`${selectedDataStoreKey.registration.section}:in:${section}`] : []),
                 ]}
