@@ -2,7 +2,7 @@ import { useRecoilValue } from 'recoil';
 import { ProgramConfig } from 'dhis2-semis-types'
 import React, { useEffect, useMemo, useState } from "react";
 import { TableDataRefetch, Modules } from "dhis2-semis-types"
-import { InfoPage, SwitchButtonView, useSchoolCalendar } from 'dhis2-semis-components'
+import { InfoPage, SwitchButtonView, useSchoolCalendarKey } from 'dhis2-semis-components'
 import { Table } from "dhis2-semis-components";
 import EnrollmentActionsButtons from "../../components/enrollmentButtons/EnrollmentActionsButtons";
 import { RulesEngine, useHeader, useTableData, useUrlParams, useViewPortWidth } from "dhis2-semis-functions";
@@ -32,7 +32,7 @@ export default function Performance() {
   const [filterState, setFilterState] = useState<{ dataElements: any[], attributes: any[] }>({ attributes: [], dataElements: [] });
   const { columns } = useHeader({ dataStoreData, programConfigData: program as unknown as ProgramConfig, programStage: selected.id! });
   const values = { [dataStoreData.registration.grade]: grade }
-  const { academicYear: academicYearId } = useSchoolCalendar()
+  const { academicYear: academicYearId } = useSchoolCalendarKey()
 
   const memoizedValues = useMemo(() => values, [JSON.stringify(values)]);
 
