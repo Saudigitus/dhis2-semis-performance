@@ -6,21 +6,21 @@ import { useConfig } from '@dhis2/app-runtime';
 import styles from './enrollmentActionsButtons.module.css'
 import { Button, ButtonStrip, IconUserGroup16, IconEdit24 } from "@dhis2/ui";
 import { useCheckFilters, useGetSectionTypeLabel, useShowAlerts, useUrlParams } from 'dhis2-semis-functions';
-import { DataExporter, DataImporter, CustomDropdown as DropdownButton, useSchoolCalendar } from 'dhis2-semis-components';
+import { DataExporter, DataImporter, CustomDropdown as DropdownButton, useSchoolCalendarKey } from 'dhis2-semis-components';
 import EditOffIcon from '@mui/icons-material/EditOff';
 import useGetSelectedKeys from '../../hooks/config/useGetSelectedKeys';
 
 function EnrollmentActionsButtons({ setEditionMode, editionMode }: { setEditionMode: (editionMode: boolean) => void, editionMode: boolean }) {
     const { baseUrl } = useConfig()
     const { urlParameters } = useUrlParams();
-    const { school: orgUnit, class: section, grade, academicYear } = urlParameters();
+    const { school: orgUnit, class: section, grade, academicYear } = urlParameters;
     const { sectionName } = useGetSectionTypeLabel();
     const [stats, setStats] = useState<{ posted: number, conflicts: any[] }>({ posted: 0, conflicts: [] })
     const [open, setOpen] = useState<boolean>(false)
     const { dataStoreData: selectedDataStoreKey, program: programData } = useGetSelectedKeys()
     const { hide, show } = useShowAlerts()
     const { areAllSelected } = useCheckFilters({ filters: (selectedDataStoreKey.filters.dataElements ?? []) as unknown as any })
-    const { academicYear: academicYearId } = useSchoolCalendar()
+    const { academicYear: academicYearId } = useSchoolCalendarKey()
 
     const showAlert = (error: any) => {
         show({ message: `Unknown error: ${error}`, type: { critical: true } })
