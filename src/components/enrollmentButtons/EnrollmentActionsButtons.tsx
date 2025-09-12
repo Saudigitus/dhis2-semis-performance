@@ -13,7 +13,7 @@ import useGetSelectedKeys from '../../hooks/config/useGetSelectedKeys';
 function EnrollmentActionsButtons({ setEditionMode, editionMode }: { setEditionMode: (editionMode: boolean) => void, editionMode: boolean }) {
     const { baseUrl } = useConfig()
     const { urlParameters } = useUrlParams();
-    const { school: orgUnit, class: section, grade, academicYear } = urlParameters();
+    const { school: orgUnit, class: section, grade, academicYear } = urlParameters;
     const { sectionName } = useGetSectionTypeLabel();
     const [stats, setStats] = useState<{ posted: number, conflicts: any[] }>({ posted: 0, conflicts: [] })
     const [open, setOpen] = useState<boolean>(false)

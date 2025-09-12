@@ -78,7 +78,7 @@ export const changeDataElementType = (props: changeDataElementTypeProps) => {
     const { headerRows, dataElementIds } = props;
 
     // Note: This function mutates headerRows. If immutability is required here too, use map or cloneDeep.
-    headerRows.forEach((headerRow: any) => {
+    headerRows?.forEach((headerRow: any) => {
         const { id } = headerRow;
         if (dataElementIds?.includes(id)) {
             headerRow.type = "custom";

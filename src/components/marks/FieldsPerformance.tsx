@@ -1,9 +1,11 @@
+import { format } from 'date-fns';
+import { useRecoilState } from 'recoil';
 import SimpleField from './SimpleField';
 import { useEffect, useMemo, useState } from 'react';
-import { EnrollmentStatus } from 'dhis2-semis-types';
 import useSaveMarks from '../../hooks/marks/useSaveMarks';
-import { RulesEngine, useUrlParams } from 'dhis2-semis-functions';
+import { EnrollmentStatus, TableDataRefetch } from 'dhis2-semis-types';
 import { formatMarksToSave } from '../../utils/marks/formatMarksToPost';
+import { RulesEngine, useUploadEvents, useUrlParams } from 'dhis2-semis-functions';
 
 interface valueType extends Record<string, any> {
     enrollmentId: string
@@ -24,10 +26,11 @@ type FieldsPerformancePros = {
 
 export default function FieldsPerformance(props: FieldsPerformancePros) {
     const { urlParameters } = useUrlParams()
-    const { programStage } = urlParameters()
+    const { programStage, schoolName } = urlParameters
     const { dataElements, value, otherProps, program, originalData } = props;
     const [values, setValues] = useState({ ...value })
 
+    const { uploadValues } = useUploadEvents()
     const { saveMarks, error, loading, success } = useSaveMarks()
 
     const memoizedValues = useMemo(() => values, [JSON.stringify(values)]);
@@ -38,9 +41,10 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
     })
 
     const [newMark, setNewMark] = useState(updatedVariables[0].value)
+    const [refetch, setRefetch] = useRecoilState(TableDataRefetch);
 
     useEffect(() => {
-        runRulesEngine({})
+        runRulesEngine({overrideValues: memoizedValues, overrideVariables: memoizedDataElements as any})
     }, [value, newMark])
 
     const handleChange = (e: any) => {
@@ -53,36 +57,59 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
             [dataElements.id]: newValue
         }))
 
-        runRulesEngine({})
+        runRulesEngine({overrideValues: memoizedValues, overrideVariables: memoizedDataElements as any})
     }
 
     const handleBlur = async (e: any) => {
-        const marks = formatMarksToSave({
-            newMark: newMark,
-            dataElement: dataElements?.id,
-            event: {
-                orgUnit: value?.orgUnitId,
-                program: value?.programId,
-                programStage: programStage!,
-                enrollment: value?.enrollmentId,
-                event: value?.programStageEvent,
-                trackedEntity: value?.trackedEntity
-            },
-        })
+        if (!values?.programStageEvent) {
+            const data = {
+                events: [{
+                    notes: [],
+                    status: "COMPLETED",
+                    orgUnitName: schoolName!,
+                    orgUnit: value?.orgUnitId,
+                    program: value?.programId,
+                    programStage: programStage!,
+                    event: value?.programStageEvent,
+                    enrollment: value?.enrollmentId,
+                    trackedEntity: value?.trackedEntity,
+                    occurredAt: format(new Date(), "yyyy-MM-dd"),
+                    scheduledAt: format(new Date(), "yyyy-MM-dd"),
+                    dataValues: [{ value: newMark, dataElement: dataElements?.id }]
+                }]
+            }
 
-        if (newMark != updatedVariables[0].value && !updatedVariables[0].error) {
-            await saveMarks(marks)
-                .then(() => {
-                    // Update the original data with the new mark
-                    updatedVariables[0].value = newMark;
-                    originalData[dataElements.id] = newMark;
-                })
-                .catch((err) => {
-                    setTimeout(() => {
-                        setNewMark(updatedVariables[0].value);
-                        originalData[dataElements.id] = updatedVariables[0].value;
-                    }, 3000)
-                })
+            await uploadValues(data, "COMMIT", "CREATE_AND_UPDATE")
+                .then(() => setRefetch(!refetch))
+        }
+        else {
+            const marks = formatMarksToSave({
+                newMark: newMark,
+                dataElement: dataElements?.id,
+                event: {
+                    orgUnit: value?.orgUnitId,
+                    program: value?.programId,
+                    programStage: programStage!,
+                    enrollment: value?.enrollmentId,
+                    event: value?.programStageEvent,
+                    trackedEntity: value?.trackedEntity
+                },
+            })
+
+            if (newMark != updatedVariables[0].value && !updatedVariables[0].error) {
+                await saveMarks(marks)
+                    .then(() => {
+                        // Update the original data with the new mark
+                        updatedVariables[0].value = newMark;
+                        originalData[dataElements.id] = newMark;
+                    })
+                    .catch(() => {
+                        setTimeout(() => {
+                            setNewMark(updatedVariables[0].value);
+                            originalData[dataElements.id] = updatedVariables[0].value;
+                        }, 3000)
+                    })
+            }
         }
     }
 

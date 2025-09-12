@@ -27,7 +27,7 @@ export default function Performance() {
   const [editionMode, setEditionMode] = useState(false)
   const [pagination, setPagination] = useState({ page: 1, pageSize: 50, totalPages: 0, totalElements: 0 })
   const [selected, setSelected] = useState<{ id: any, label: string }>({ id: dataStoreData.performance?.programStages?.[0].programStage, label: "" });
-  const { academicYear, grade, class: section, schoolName, school, programStage } = urlParameters();
+  const { academicYear, grade, class: section, schoolName, school, programStage } = urlParameters
   const { getData, tableData, loading } = useTableData({ module: Modules.Performance });
   const [filterState, setFilterState] = useState<{ dataElements: any[], attributes: any[] }>({ attributes: [], dataElements: [] });
   const { columns } = useHeader({ dataStoreData, programConfigData: program as unknown as ProgramConfig, programStage: selected.id! });
@@ -44,7 +44,7 @@ export default function Performance() {
   })
 
   useEffect(() => {
-    if (!programStage ) {
+    if (!programStage) {
       add("programStage", dataStoreData.performance?.programStages?.[0].programStage || "");
     }
   }, [programStage])
@@ -66,7 +66,10 @@ export default function Performance() {
   const termSelected = program?.programStages?.find((stage) => stage.id === programStage)
 
   useEffect(() => {
-    runRulesEngine({})
+    runRulesEngine({ overrideValues: memoizedValues, overrideVariables: columns as any })
+  }, [memoizedValues])
+
+  useEffect(() => {
 
     void getData({
       orgUnit: school!,
@@ -143,7 +146,7 @@ export default function Performance() {
               defaultFilterNumber={5}
               filterState={filterState}
               loading={loading}
-              rightElements={<EnrollmentActionsButtons setEditionMode={setEditionMode} editionMode={editionMode}/>}
+              rightElements={<EnrollmentActionsButtons setEditionMode={setEditionMode} editionMode={editionMode} />}
               setFilterState={setFilterState}
               pagination={pagination}
               setPagination={setPagination}

@@ -14,7 +14,7 @@ export default function ShowStats({ stats, open, setOpen }: { setOpen: (args: bo
     const { dataStoreData, program: programData } = useGetSelectedKeys()
     const { viewPortWidth } = useViewPortWidth();
     const { urlParameters } = useUrlParams()
-    const { programStage } = urlParameters()
+    const { programStage } = urlParameters
     const { columns } = useHeader({ dataStoreData, programConfigData: programData as unknown as ProgramConfig, programStage: programStage! });
     const setRefetch = useSetRecoilState(TableDataRefetch);
 
