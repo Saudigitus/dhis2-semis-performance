@@ -70,7 +70,6 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
                     orgUnit: value?.orgUnitId,
                     program: value?.programId,
                     programStage: programStage!,
-                    event: value?.programStageEvent,
                     enrollment: value?.enrollmentId,
                     trackedEntity: value?.trackedEntity,
                     occurredAt: format(new Date(), "yyyy-MM-dd"),
