@@ -13,7 +13,7 @@ const Performance = () => {
         // <AppWrapper baseUrl={baseUrl} dataStoreKey='dataStore/semis/values' schoolCalendarKey='dataStore/semis/schoolCalendar'>
         //     <InitializeWrapper>
         //         <HashRouter>
-                    <Router />
+        <Router />
         //         </HashRouter>
         //     </InitializeWrapper>
         // </AppWrapper>
