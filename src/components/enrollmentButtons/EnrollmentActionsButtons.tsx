@@ -9,10 +9,13 @@ import { useCheckFilters, useGetSectionTypeLabel, useShowAlerts, useUrlParams } 
 import { DataExporter, DataImporter, CustomDropdown as DropdownButton, useSchoolCalendarKey } from 'dhis2-semis-components';
 import EditOffIcon from '@mui/icons-material/EditOff';
 import useGetSelectedKeys from '../../hooks/config/useGetSelectedKeys';
+import { TableDataRefetch } from 'dhis2-semis-types';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 function EnrollmentActionsButtons({ setEditionMode, editionMode }: { setEditionMode: (editionMode: boolean) => void, editionMode: boolean }) {
     const { baseUrl } = useConfig()
     const { urlParameters } = useUrlParams();
+    const [refetch, setRefetch] = useRecoilState(TableDataRefetch);
     const { school: orgUnit, class: section, grade, academicYear } = urlParameters;
     const { sectionName } = useGetSectionTypeLabel();
     const [stats, setStats] = useState<{ posted: number, conflicts: any[] }>({ posted: 0, conflicts: [] })
@@ -39,6 +42,7 @@ function EnrollmentActionsButtons({ setEditionMode, editionMode }: { setEditionM
                 selectedSectionDataStore={selectedDataStoreKey}
                 updating={false}
                 title={"Import Performance"}
+                onClose={() => { setRefetch(!refetch) }}
 
             />,
             divider: true,
