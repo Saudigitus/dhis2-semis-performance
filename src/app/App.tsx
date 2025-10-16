@@ -10,13 +10,13 @@ const Performance = () => {
     const { baseUrl } = useConfig()
 
     return (
-        <AppWrapper baseUrl={baseUrl} dataStoreKey='dataStore/semis/values' schoolCalendarKey='dataStore/semis/schoolCalendar'>
-            <InitializeWrapper>
-                <HashRouter>
-                    <Router />
-                </HashRouter>
-            </InitializeWrapper>
-        </AppWrapper>
+        // <AppWrapper baseUrl={baseUrl} dataStoreKey='dataStore/semis/values' schoolCalendarKey='dataStore/semis/schoolCalendar'>
+        //     <InitializeWrapper>
+        //         <HashRouter>
+        <Router />
+        //         </HashRouter>
+        //     </InitializeWrapper>
+        // </AppWrapper>
     )
 }
 
