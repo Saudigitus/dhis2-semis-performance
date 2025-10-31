@@ -13,13 +13,13 @@ const Performance = ({ i18n }: { i18n: D2I18n }) => {
     const translate: any = i18n ? i18n : translation
 
     return (
-        <AppWrapper i18n={translate} baseUrl={baseUrl} dataStoreKey='dataStore/semis/values' schoolCalendarKey='dataStore/semis/schoolCalendar'>
-            <InitializeWrapper>
-                <HashRouter>
+        // <AppWrapper i18n={translate} baseUrl={baseUrl} dataStoreKey='dataStore/semis/values' schoolCalendarKey='dataStore/semis/schoolCalendar'>
+        //     <InitializeWrapper>
+        //         <HashRouter>
                     <Router i18n={translate} />
-                </HashRouter>
-            </InitializeWrapper>
-        </AppWrapper>
+        //         </HashRouter>
+        //     </InitializeWrapper>
+        // </AppWrapper>
     )
 }
 
