@@ -9,8 +9,9 @@ import { useCheckFilters, useGetSectionTypeLabel, useShowAlerts, useUrlParams } 
 import { DataExporter, DataImporter, CustomDropdown as DropdownButton, useSchoolCalendarKey } from 'dhis2-semis-components';
 import EditOffIcon from '@mui/icons-material/EditOff';
 import useGetSelectedKeys from '../../hooks/config/useGetSelectedKeys';
+import { D2I18n } from 'dhis2-semis-types';
 
-function EnrollmentActionsButtons({ setEditionMode, editionMode }: { setEditionMode: (editionMode: boolean) => void, editionMode: boolean }) {
+function EnrollmentActionsButtons({ setEditionMode, editionMode, i18n }: { i18n: D2I18n, setEditionMode: (editionMode: boolean) => void, editionMode: boolean }) {
     const { baseUrl } = useConfig()
     const { urlParameters } = useUrlParams();
     const { school: orgUnit, class: section, grade, academicYear } = urlParameters;
@@ -31,14 +32,14 @@ function EnrollmentActionsButtons({ setEditionMode, editionMode }: { setEditionM
         {
             label: <DataImporter
                 baseURL={baseUrl}
-                label={'Bulk Performance'}
+                label={i18n.t('Bulk Performance')}
                 module='performance'
                 onError={(e: any) => { showAlert(e) }}
                 programConfig={programData!}
                 sectionType={sectionName}
                 selectedSectionDataStore={selectedDataStoreKey}
                 updating={false}
-                title={"Import Performance"}
+                title={i18n.t("Import Performance")}
 
             />,
             divider: true,
@@ -53,7 +54,7 @@ function EnrollmentActionsButtons({ setEditionMode, editionMode }: { setEditionM
                     ...(grade ? [`${selectedDataStoreKey.registration.grade}:in:${grade}`] : []),
                     ...(section ? [`${selectedDataStoreKey.registration.section}:in:${section}`] : []),
                 ]}
-                label='Export students performace'
+                label={i18n.t('Export students performace')}
                 module='performance'
                 onError={(e: any) => { showAlert(e) }}
                 programConfig={programData!}
@@ -71,19 +72,19 @@ function EnrollmentActionsButtons({ setEditionMode, editionMode }: { setEditionM
             <ShowStats open={open} setOpen={setOpen} stats={stats} />
             <ButtonStrip className={styles.work_buttons}>
 
-                <Tooltip title={orgUnit === null ? "Please select an organisation unit before" : ""}>
+                <Tooltip title={orgUnit === null ? i18n.t("Please select an organisation unit before") : ""}>
                     <Button
                         onClick={() => setEditionMode(!editionMode)}
                         icon={editionMode ? <EditOffIcon /> : <IconEdit24 />}
                     >
-                        <span>{editionMode ? "Disable Edition Mode" : "Allow Edit Mode"}</span>
+                        <span>{editionMode ?i18n.t("Disable Edition Mode") :i18n.t("Allow Edit Mode")}</span>
                     </Button >
                 </Tooltip>
 
-                <Tooltip title={!areAllSelected() ? "Please select all filters" : ""} >
+                <Tooltip title={!areAllSelected() ? i18n.t("Please select all filters"): ""} >
                     <span>
                         <DropdownButton
-                            name={<span className={styles.work_buttons_text}>Bulk Performance</span> as unknown as string}
+                            name={<span className={styles.work_buttons_text}>{i18n.t("Bulk Performance")}</span> as unknown as string}
                             disabled={!!(orgUnit == undefined || !areAllSelected() || academicYear == undefined)}
                             icon={<IconUserGroup16 />}
                             options={enrollmentOptions}

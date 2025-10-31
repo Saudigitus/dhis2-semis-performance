@@ -4,39 +4,39 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
 "POT-Creation-Date: 2025-10-31T06:53:58.245Z\n"
 "PO-Revision-Date: 2025-10-31T06:53:58.245Z\n"
 
 msgid "Bulk Performance"
-msgstr "Bulk Performance"
+msgstr "Performance en Masse"
 
 msgid "Import Performance"
-msgstr "Import Performance"
+msgstr "Importer la Performance"
 
 msgid "Export students performace"
-msgstr "Export students performace"
+msgstr "Exporter la performance des étudiants"
 
 msgid "Please select an organisation unit before"
-msgstr "Please select an organisation unit before"
+msgstr "Veuillez d'abord sélectionner une unité d'organisation"
 
 msgid "Disable Edition Mode"
-msgstr "Disable Edition Mode"
+msgstr "Désactiver le Mode d'Édition"
 
 msgid "Allow Edit Mode"
-msgstr "Allow Edit Mode"
+msgstr "Autoriser le Mode d'Édition"
 
 msgid "Please select all filters"
-msgstr "Please select all filters"
+msgstr "Veuillez sélectionner tous les filtres"
 
 msgid "SEMIS-Performance"
 msgstr "SEMIS-Performance"
 
 msgid "Select the Organization unit you want to view data"
-msgstr "Select the Organization unit you want to view data"
+msgstr "Sélectionnez l’unité d’organisation dont vous souhaitez voir les données"
 
 msgid "Use global filters(Class, Grade and Academic Year)"
-msgstr "Use global filters(Class, Grade and Academic Year)"
+msgstr "Utilisez les filtres globaux (Classe, Niveau et Année académique)"
 
 msgid "Performance"
 msgstr "Performance"

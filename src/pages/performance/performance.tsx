@@ -1,5 +1,5 @@
 import { useRecoilValue } from 'recoil';
-import { ProgramConfig } from 'dhis2-semis-types'
+import { D2I18n, ProgramConfig } from 'dhis2-semis-types'
 import React, { useEffect, useMemo, useState } from "react";
 import { TableDataRefetch, Modules } from "dhis2-semis-types"
 import { InfoPage, SwitchButtonView, useSchoolCalendarKey } from 'dhis2-semis-components'
@@ -19,7 +19,7 @@ interface FilteredStage {
   label: string;
 }
 
-export default function Performance() {
+export default function Performance({ i18n }: { i18n: D2I18n }) {
   const { program, dataStoreData } = useGetSelectedKeys();
   const { viewPortWidth } = useViewPortWidth();
   const { urlParameters, add } = useUrlParams();
@@ -121,13 +121,13 @@ export default function Performance() {
       {
         !(Boolean(schoolName) && Boolean(school)) ?
           <InfoPage
-            title="SEMIS-Performance"
+            title={i18n.t("SEMIS-Performance")}
             sections={[
               {
-                sectionTitle: "Follow the instructions to proceed:",
+                sectionTitle: i18n.t("Follow the instructions to proceed:"),
                 instructions: [
-                  "Select the Organization unit you want to view data",
-                  "Use global filters(Class, Grade and Academic Year)"
+                  i18n.t("Select the Organization unit you want to view data"),
+                  i18n.t("Use global filters(Class, Grade and Academic Year)")
                 ]
               }
             ]}
@@ -136,7 +136,7 @@ export default function Performance() {
           <>
             <Table
               programConfig={program!}
-              title="Performance"
+              title={i18n.t("Performance")}
               viewPortWidth={viewPortWidth}
               columns={changeDataElementType({ headerRows: updatedVariables as unknown as any, dataElementIds })}
               tableData={includeFields({
@@ -146,7 +146,7 @@ export default function Performance() {
               defaultFilterNumber={5}
               filterState={filterState}
               loading={loading}
-              rightElements={<EnrollmentActionsButtons setEditionMode={setEditionMode} editionMode={editionMode} />}
+              rightElements={<EnrollmentActionsButtons i18n={i18n} setEditionMode={setEditionMode} editionMode={editionMode} />}
               setFilterState={setFilterState}
               pagination={pagination}
               setPagination={setPagination}
