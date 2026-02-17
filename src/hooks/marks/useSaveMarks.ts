@@ -3,9 +3,13 @@ import { useDataEngine } from "@dhis2/app-runtime"
 import { useShowAlerts } from "dhis2-semis-functions";
 
 const POST_DATA_VALUE: any = {
-    type: 'update',
-    resource: "events",
-    id: ({ id }: any) => id,
+    type: 'create',
+    params: {
+        async: false,
+        importStrategy: "CREATE_AND_UPDATE"
+    },
+    resource: "tracker",
+    // id: ({ id }: any) => id,
     data: ({ data }: any) => data
 }
 
@@ -19,10 +23,10 @@ export default function useSaveMarks() {
     const [success, setSuccess] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
 
-    const saveMarks = async ({ id, data }: saveMarksType) => {
+    const saveMarks = async (data: any) => {
         setLoading(true);
         return await engine.mutate(POST_DATA_VALUE, {
-            variables: { id, data },
+            variables: { data },
             onComplete: ((resp) => {
                 setData(resp);
                 setSuccess(true);

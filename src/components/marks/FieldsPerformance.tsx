@@ -44,7 +44,7 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
     const [refetch, setRefetch] = useRecoilState(TableDataRefetch);
 
     useEffect(() => {
-        runRulesEngine({overrideValues: memoizedValues, overrideVariables: memoizedDataElements as any})
+        runRulesEngine({ overrideValues: memoizedValues, overrideVariables: memoizedDataElements as any })
     }, [value, newMark])
 
     const handleChange = (e: any) => {
@@ -57,7 +57,7 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
             [dataElements.id]: newValue
         }))
 
-        runRulesEngine({overrideValues: memoizedValues, overrideVariables: memoizedDataElements as any})
+        runRulesEngine({ overrideValues: memoizedValues, overrideVariables: memoizedDataElements as any })
     }
 
     const handleBlur = async (e: any) => {
@@ -83,18 +83,21 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
                 .then(() => setRefetch(!refetch))
         }
         else {
-            const marks = formatMarksToSave({
-                newMark: newMark,
-                dataElement: dataElements?.id,
-                event: {
+            const marks = {
+                events: [{
+                    dataValues: [{
+                        value: newMark,
+                        dataElement: dataElements?.id,
+                    }],
                     orgUnit: value?.orgUnitId,
                     program: value?.programId,
                     programStage: programStage!,
                     enrollment: value?.enrollmentId,
                     event: value?.programStageEvent,
-                    trackedEntity: value?.trackedEntity
-                },
-            })
+                    trackedEntity: value?.trackedEntity,
+                    occurredAt: value?.registrationEventOccurredAt,
+                }]
+            }
 
             if (newMark != updatedVariables[0].value && !updatedVariables[0].error) {
                 await saveMarks(marks)
