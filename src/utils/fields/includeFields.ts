@@ -42,7 +42,7 @@ export const includeFields = (props: IncludeFieldsProps) => {
     const modifiedRowsData = cloneDeep(rowsData);
 
     // Transform the rows immutably using map
-    const newRowsData = modifiedRowsData.map((row, i) => {
+    const newRowsData = modifiedRowsData.map((row: any, i: number) => {
         // Create a new row object to avoid mutating the cloned row
         const newRow = { ...row };
 
