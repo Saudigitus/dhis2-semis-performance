@@ -1,11 +1,11 @@
 import { format } from 'date-fns';
 import { useRecoilState } from 'recoil';
-import SimpleField from './SimpleField';
 import { useEffect, useMemo, useState } from 'react';
 import useSaveMarks from '../../hooks/marks/useSaveMarks';
 import { EnrollmentStatus, TableDataRefetch } from 'dhis2-semis-types';
 import { formatMarksToSave } from '../../utils/marks/formatMarksToPost';
 import { RulesEngine, useUploadEvents, useUrlParams } from 'dhis2-semis-functions';
+import { performanceFieldsMapping } from './performanceFieldsMapping';
 
 interface valueType extends Record<string, any> {
     enrollmentId: string
@@ -27,7 +27,7 @@ type FieldsPerformancePros = {
 export default function FieldsPerformance(props: FieldsPerformancePros) {
     const { urlParameters } = useUrlParams()
     const { programStage, schoolName } = urlParameters
-    const { dataElements, value, otherProps, program, originalData } = props;
+    const { dataElements, value, program, originalData } = props;
     const [values, setValues] = useState({ ...value })
 
     const { uploadValues } = useUploadEvents()
@@ -48,7 +48,7 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
     }, [value, newMark])
 
     const handleChange = (e: any) => {
-        const newValue = e.target.value
+        const newValue = e?.target?.value ?? e
         setNewMark(newValue)
 
         // Update the values in the state
@@ -60,7 +60,7 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
         runRulesEngine({ overrideValues: memoizedValues, overrideVariables: memoizedDataElements as any })
     }
 
-    const handleBlur = async (e: any) => {
+    const handleBlur = async () => {
         if (!values?.programStageEvent) {
             const data = {
                 events: [{
@@ -117,18 +117,24 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
     }
 
     return (
-        <SimpleField
-            visible={updatedVariables[0]?.visible}
-            loading={loading}
-            error={updatedVariables[0]?.error || error}
-            success={success}
-            warning={updatedVariables[0]?.warning}
-            disabled={updatedVariables[0]?.disabled}
-            value={newMark}
-            handleBlur={handleBlur}
-            handleChange={handleChange}
-            field={updatedVariables[0]}
-            content={updatedVariables[0]?.content || ""}
-        />
-    );
+        <>
+            {
+                performanceFieldsMapping({
+                    visible: updatedVariables[0]?.visible,
+                    loading: loading,
+                    error: updatedVariables[0]?.error || error,
+                    success: success,
+                    warning: updatedVariables[0]?.warning,
+                    disabled: updatedVariables[0]?.disabled,
+                    value: newMark,
+                    handleBlur: handleBlur,
+                    handleChange: handleChange,
+                    field: updatedVariables[0],
+                    content: updatedVariables[0]?.content || "",
+                    fieldType: updatedVariables[0]?.valueType,
+                    options: updatedVariables[0]?.options?.optionSet?.options
+                })
+            }
+        </>
+    )
 }
