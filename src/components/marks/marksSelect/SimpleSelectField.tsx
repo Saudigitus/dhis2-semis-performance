@@ -31,10 +31,6 @@ export function SingleSelect({
     handleChange,
     handleBlur,
 }: SingleSelectProps) {
-    console.log(error,
-        errorText,
-        helperText,)
-    /* ── State ── */
     const [open, setOpen] = useState(false);
     const [filter, setFilter] = useState('');
     const [highlightedIndex, setHighlightedIndex] = useState(-1);
@@ -47,6 +43,13 @@ export function SingleSelect({
     const optionsRef = useRef<HTMLUListElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
     const blurTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const portalTargetRef = useRef<HTMLElement | null>(null);
+
+    /* ── Capture ownerDocument.body once mounted ── */
+    useEffect(() => {
+        portalTargetRef.current =
+            containerRef.current?.ownerDocument?.body ?? null;
+    }, []);
 
     /* ── Filtered options ── */
     const filtered = useMemo(() => {
@@ -89,21 +92,23 @@ export function SingleSelect({
     }, []);
 
     /* ── Select an option ── */
-    const selectOption = (value: string) => {
-        handleChange?.(value);
+    const selectOption = (optionValue: string) => {
+        handleChange?.(optionValue);
         triggerRef.current?.focus();
-    }
+    };
 
     /* ── Focus management for handleBlur ── */
     const handleContainerBlur = useCallback(
-        (e: FocusEvent<HTMLDivElement>) => {
+        (_e: FocusEvent<HTMLDivElement>) => {
             if (blurTimeoutRef.current) clearTimeout(blurTimeoutRef.current);
 
             blurTimeoutRef.current = setTimeout(() => {
-                const activeEl = document.activeElement;
+                const ownerDoc = containerRef.current?.ownerDocument;
+                const activeEl = ownerDoc?.activeElement ?? null;
                 const inContainer =
                     containerRef.current?.contains(activeEl) ?? false;
-                const inMenu = menuRef.current?.contains(activeEl) ?? false;
+                const inMenu =
+                    menuRef.current?.contains(activeEl) ?? false;
 
                 if (!inContainer && !inMenu) {
                     handleBlur?.();
@@ -115,14 +120,16 @@ export function SingleSelect({
 
     /* ── Portal menu blur / focus ── */
     const handleMenuBlur = useCallback(
-        (e: FocusEvent<HTMLDivElement>) => {
+        (_e: FocusEvent<HTMLDivElement>) => {
             if (blurTimeoutRef.current) clearTimeout(blurTimeoutRef.current);
 
             blurTimeoutRef.current = setTimeout(() => {
-                const activeEl = document.activeElement;
+                const ownerDoc = containerRef.current?.ownerDocument;
+                const activeEl = ownerDoc?.activeElement ?? null;
                 const inContainer =
                     containerRef.current?.contains(activeEl) ?? false;
-                const inMenu = menuRef.current?.contains(activeEl) ?? false;
+                const inMenu =
+                    menuRef.current?.contains(activeEl) ?? false;
 
                 if (!inContainer && !inMenu) {
                     closeMenu();
@@ -140,33 +147,45 @@ export function SingleSelect({
     /* ── Click outside ── */
     useEffect(() => {
         if (!open) return;
+
+        const ownerDoc = containerRef.current?.ownerDocument;
+        if (!ownerDoc) return;
+
         const handler = (e: MouseEvent) => {
             const target = e.target as Node;
-            const inContainer = containerRef.current?.contains(target) ?? false;
+            const inContainer =
+                containerRef.current?.contains(target) ?? false;
             const inMenu = menuRef.current?.contains(target) ?? false;
 
             if (!inContainer && !inMenu) {
                 closeMenu();
             }
         };
-        document.addEventListener('mousedown', handler);
-        return () => document.removeEventListener('mousedown', handler);
+
+        ownerDoc.addEventListener('mousedown', handler);
+        return () => ownerDoc.removeEventListener('mousedown', handler);
     }, [open, closeMenu]);
 
-    /* ── Position menu on open and reposition on scroll/resize ── */
+    /* ── Position menu on open ── */
     useLayoutEffect(() => {
         if (!open) return;
         updateMenuPosition();
     }, [open, updateMenuPosition]);
 
+    /* ── Reposition on scroll / resize ── */
     useEffect(() => {
         if (!open) return;
+
+        const ownerWin =
+            containerRef.current?.ownerDocument?.defaultView;
+        if (!ownerWin) return;
+
         const reposition = () => updateMenuPosition();
-        window.addEventListener('scroll', reposition, true);
-        window.addEventListener('resize', reposition);
+        ownerWin.addEventListener('scroll', reposition, true);
+        ownerWin.addEventListener('resize', reposition);
         return () => {
-            window.removeEventListener('scroll', reposition, true);
-            window.removeEventListener('resize', reposition);
+            ownerWin.removeEventListener('scroll', reposition, true);
+            ownerWin.removeEventListener('resize', reposition);
         };
     }, [open, updateMenuPosition]);
 
@@ -200,7 +219,11 @@ export function SingleSelect({
                     }
                     setHighlightedIndex((prev) => {
                         let next = prev + 1;
-                        while (next < filtered.length && filtered[next].disabled) next++;
+                        while (
+                            next < filtered.length &&
+                            filtered[next].disabled
+                        )
+                            next++;
                         return next < filtered.length ? next : prev;
                     });
                     break;
@@ -223,7 +246,10 @@ export function SingleSelect({
                     if (!open) {
                         e.preventDefault();
                         openMenu();
-                    } else if (highlightedIndex >= 0 && filtered[highlightedIndex]) {
+                    } else if (
+                        highlightedIndex >= 0 &&
+                        filtered[highlightedIndex]
+                    ) {
                         e.preventDefault();
                         if (!filtered[highlightedIndex].disabled) {
                             selectOption(filtered[highlightedIndex].value);
@@ -259,7 +285,15 @@ export function SingleSelect({
                     break;
             }
         },
-        [disabled, open, openMenu, closeMenu, filtered, highlightedIndex, selectOption],
+        [
+            disabled,
+            open,
+            openMenu,
+            closeMenu,
+            filtered,
+            highlightedIndex,
+            selectOption,
+        ],
     );
 
     /* ── Build class names ── */
@@ -281,79 +315,90 @@ export function SingleSelect({
         .join(' ');
 
     /* ── Dropdown menu rendered via Portal ── */
-    const dropdownMenu = open
-        ? createPortal(
-            <div
-                ref={menuRef}
-                className={`dhis2-single-select__menu${dense ? ' dhis2-single-select__menu--dense' : ''}`}
-                style={menuStyle}
-                role="presentation"
-                onBlur={handleMenuBlur}
-                onFocus={handleMenuFocus}
-                onKeyDown={handleKeyDown}
-            >
-                {/* Search input */}
-                {filterable && (
-                    <div className="dhis2-single-select__search">
-                        <input
-                            ref={searchRef}
-                            type="text"
-                            className="dhis2-single-select__search-input"
-                            placeholder={filterPlaceholder}
-                            value={filter}
-                            onChange={(e) => {
-                                setFilter(e.target.value);
-                                setHighlightedIndex(-1);
-                            }}
-                            autoComplete="off"
-                        />
-                    </div>
-                )}
+    const portalTarget = portalTargetRef.current;
 
-                {/* Options list */}
-                <ul
-                    ref={optionsRef}
-                    className="dhis2-single-select__options"
-                    role="listbox"
-                >
-                    {filtered.length === 0 ? (
-                        <li className="dhis2-single-select__empty">{noMatchText}</li>
-                    ) : (
-                        filtered.map((option, index) => {
-                            const isSelected = option.value === value;
-                            const isHighlighted = index === highlightedIndex;
-                            const optCls = [
-                                'dhis2-single-select__option',
-                                isSelected && 'dhis2-single-select__option--selected',
-                                isHighlighted && 'dhis2-single-select__option--highlighted',
-                                option.disabled && 'dhis2-single-select__option--disabled',
-                            ]
-                                .filter(Boolean)
-                                .join(' ');
+    const dropdownMenu =
+        open && portalTarget
+            ? createPortal(
+                  <div
+                      ref={menuRef}
+                      className={`dhis2-single-select__menu${dense ? ' dhis2-single-select__menu--dense' : ''}`}
+                      style={menuStyle}
+                      role="presentation"
+                      onBlur={handleMenuBlur}
+                      onFocus={handleMenuFocus}
+                      onKeyDown={handleKeyDown}
+                  >
+                      {filterable && (
+                          <div className="dhis2-single-select__search">
+                              <input
+                                  ref={searchRef}
+                                  type="text"
+                                  className="dhis2-single-select__search-input"
+                                  placeholder={filterPlaceholder}
+                                  value={filter}
+                                  onChange={(e) => {
+                                      setFilter(e.target.value);
+                                      setHighlightedIndex(-1);
+                                  }}
+                                  autoComplete="off"
+                              />
+                          </div>
+                      )}
 
-                            return (
-                                <li
-                                    key={option.value}
-                                    className={optCls}
-                                    role="option"
-                                    aria-selected={isSelected}
-                                    onMouseEnter={() => setHighlightedIndex(index)}
-                                    onMouseLeave={() => setHighlightedIndex(-1)}
-                                    onClick={() => {
-                                        selectOption(option.value);
-                                    }}
-                                >
-                                    <CheckIcon visible={isSelected} />
-                                    {option.label}
-                                </li>
-                            );
-                        })
-                    )}
-                </ul>
-            </div>,
-            document.body,
-        )
-        : null;
+                      <ul
+                          ref={optionsRef}
+                          className="dhis2-single-select__options"
+                          role="listbox"
+                      >
+                          {filtered.length === 0 ? (
+                              <li className="dhis2-single-select__empty">
+                                  {noMatchText}
+                              </li>
+                          ) : (
+                              filtered.map((option, index) => {
+                                  const isSelected = option.value === value;
+                                  const isHighlighted =
+                                      index === highlightedIndex;
+                                  const optCls = [
+                                      'dhis2-single-select__option',
+                                      isSelected &&
+                                          'dhis2-single-select__option--selected',
+                                      isHighlighted &&
+                                          'dhis2-single-select__option--highlighted',
+                                      option.disabled &&
+                                          'dhis2-single-select__option--disabled',
+                                  ]
+                                      .filter(Boolean)
+                                      .join(' ');
+
+                                  return (
+                                      <li
+                                          key={option.value}
+                                          className={optCls}
+                                          role="option"
+                                          aria-selected={isSelected}
+                                          onMouseEnter={() =>
+                                              setHighlightedIndex(index)
+                                          }
+                                          onMouseLeave={() =>
+                                              setHighlightedIndex(-1)
+                                          }
+                                          onClick={() => {
+                                              selectOption(option.value);
+                                          }}
+                                      >
+                                          <CheckIcon visible={isSelected} />
+                                          {option.label}
+                                      </li>
+                                  );
+                              })
+                          )}
+                      </ul>
+                  </div>,
+                  portalTarget,
+              )
+            : null;
 
     /* ── Render ── */
     return (
@@ -364,8 +409,6 @@ export function SingleSelect({
             onBlur={handleContainerBlur}
             onKeyDown={handleKeyDown}
         >
-
-            {/* Trigger button */}
             <button
                 ref={triggerRef}
                 type="button"
@@ -388,10 +431,8 @@ export function SingleSelect({
                 </span>
             </button>
 
-            {/* Dropdown rendered via portal */}
             {dropdownMenu}
 
-            {/* Helper / Error text */}
             {error && errorText && (
                 <p className="dhis2-single-select__error-text">{errorText}</p>
             )}
