@@ -19,7 +19,7 @@ interface FilteredStage {
   label: string;
 }
 
-export default function Performance({ i18n }: { i18n: D2I18n }) {
+export default function Performance({ i18n, baseUrl }: { i18n: D2I18n, baseUrl: string }) {
   const { program, dataStoreData } = useGetSelectedKeys();
   const { viewPortWidth } = useViewPortWidth();
   const { urlParameters, add } = useUrlParams();
@@ -146,7 +146,7 @@ export default function Performance({ i18n }: { i18n: D2I18n }) {
               defaultFilterNumber={5}
               filterState={filterState}
               loading={loading}
-              rightElements={<EnrollmentActionsButtons i18n={i18n} setEditionMode={setEditionMode} editionMode={editionMode} />}
+              rightElements={<EnrollmentActionsButtons i18n={i18n} setEditionMode={setEditionMode} editionMode={editionMode} baseUrl={baseUrl} />}
               setFilterState={setFilterState}
               pagination={pagination}
               setPagination={setPagination}

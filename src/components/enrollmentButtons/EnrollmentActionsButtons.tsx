@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { Form } from 'react-final-form';
 import ShowStats from '../stats/showStats';
 import { Tooltip } from '@mui/material';
-import { useConfig } from '@dhis2/app-runtime';
 import styles from './enrollmentActionsButtons.module.css'
 import { Button, ButtonStrip, IconUserGroup16, IconEdit24 } from "@dhis2/ui";
 import { useCheckFilters, useGetSectionTypeLabel, useShowAlerts, useUrlParams } from 'dhis2-semis-functions';
@@ -11,8 +10,7 @@ import EditOffIcon from '@mui/icons-material/EditOff';
 import useGetSelectedKeys from '../../hooks/config/useGetSelectedKeys';
 import { D2I18n } from 'dhis2-semis-types';
 
-function EnrollmentActionsButtons({ setEditionMode, editionMode, i18n }: { i18n: D2I18n, setEditionMode: (editionMode: boolean) => void, editionMode: boolean }) {
-    const { baseUrl } = useConfig()
+function EnrollmentActionsButtons({ setEditionMode, editionMode, i18n, baseUrl }: { i18n: D2I18n, setEditionMode: (editionMode: boolean) => void, editionMode: boolean, baseUrl: string }) {
     const { urlParameters } = useUrlParams();
     const { school: orgUnit, class: section, grade, academicYear } = urlParameters;
     const { sectionName } = useGetSectionTypeLabel();
