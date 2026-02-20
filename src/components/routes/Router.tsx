@@ -8,7 +8,7 @@ export default function Router({ i18n, baseUrl }: { i18n: D2I18n; baseUrl: strin
     return (
         <Routes>
             <Route path='/' element={<WithHeaderBarLayout baseUrl={baseUrl} />}>
-                <Route key={'performance'} path={'/'} element={<Performance i18n={i18n} />} />
+                <Route key={'performance'} path={'/'} element={<Performance i18n={i18n} baseUrl={baseUrl} />} />
             </Route>
         </Routes>
     );
