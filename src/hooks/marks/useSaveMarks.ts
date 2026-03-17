@@ -13,8 +13,6 @@ const POST_DATA_VALUE: any = {
     data: ({ data }: any) => data
 }
 
-type saveMarksType = { id: string, data: object }
-
 export default function useSaveMarks() {
     const engine = useDataEngine()
     const [data, setData] = useState()
@@ -31,10 +29,6 @@ export default function useSaveMarks() {
                 setData(resp);
                 setSuccess(true);
                 setLoading(false);
-                // show({
-                //     message: "Marks saved successfully",
-                //     type: { success: true }
-                // });
                 setTimeout(() => { hide; setSuccess(false) }, 3000);
             }),
             onError: ((error) => {
@@ -49,5 +43,5 @@ export default function useSaveMarks() {
         })
     }
 
-    return { loading, saveMarks, saved: data, error, success }
+    return { loading, saveMarks, saved: data, error, success, setError }
 }

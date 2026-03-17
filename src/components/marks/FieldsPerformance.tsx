@@ -1,10 +1,8 @@
 import { format } from 'date-fns';
-import { useRecoilState } from 'recoil';
 import { useEffect, useMemo, useState } from 'react';
 import useSaveMarks from '../../hooks/marks/useSaveMarks';
-import { EnrollmentStatus, TableDataRefetch } from 'dhis2-semis-types';
-import { formatMarksToSave } from '../../utils/marks/formatMarksToPost';
-import { RulesEngine, useUploadEvents, useUrlParams } from 'dhis2-semis-functions';
+import { EnrollmentStatus } from 'dhis2-semis-types';
+import { RulesEngine, useShowAlerts, useUploadEvents, useUrlParams } from 'dhis2-semis-functions';
 import { performanceFieldsMapping } from './performanceFieldsMapping';
 
 interface valueType extends Record<string, any> {
@@ -31,7 +29,7 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
     const [values, setValues] = useState({ ...value })
 
     const { uploadValues } = useUploadEvents()
-    const { saveMarks, error, loading, success } = useSaveMarks()
+    const { saveMarks, error, loading, success, setError } = useSaveMarks()
 
     const memoizedValues = useMemo(() => values, [JSON.stringify(values)]);
     const memoizedDataElements = useMemo(() => [dataElements], [JSON.stringify(dataElements)]);
@@ -41,7 +39,7 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
     })
 
     const [newMark, setNewMark] = useState(updatedVariables[0].value)
-    const [refetch, setRefetch] = useRecoilState(TableDataRefetch);
+    const { hide, show } = useShowAlerts()
 
     useEffect(() => {
         runRulesEngine({ overrideValues: memoizedValues, overrideVariables: memoizedDataElements as any })
@@ -80,9 +78,18 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
             }
 
             await uploadValues(data, "COMMIT", "CREATE_AND_UPDATE")
-                .then(() => setRefetch(!refetch))
-        }
-        else {
+                .then((resp: any) => {
+                    if (resp?.stats?.ignored > 0) {
+                        setNewMark(null)
+                        setError(true)
+                        show({
+                            message: `Could not save the marks: ${resp?.validationReport?.errorReports?.[0]?.message}`,
+                            type: { critical: true }
+                        });
+                        setTimeout(() => { hide; setError(false); }, 3000);
+                    }
+                })
+        } else {
             const marks = {
                 events: [{
                     dataValues: [{
