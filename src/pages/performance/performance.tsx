@@ -94,7 +94,9 @@ export default function Performance({ i18n, baseUrl }: { i18n: D2I18n, baseUrl: 
   }, [tableData])
 
   useEffect(() => {
-    setSelected({ id: programStage, label: "" })
+    const selectedStage = program?.programStages?.find((stage) => stage.id === programStage);
+
+    setSelected({ id: programStage, label: selectedStage?.displayName! })
   }, [academicYear, grade, section])
 
   function filterProgramStages(programData: any, filterData: any): FilteredStage[] {
