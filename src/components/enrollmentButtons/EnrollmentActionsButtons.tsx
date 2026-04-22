@@ -70,24 +70,24 @@ function EnrollmentActionsButtons({ setEditionMode, editionMode, i18n, baseUrl }
             <ShowStats open={open} setOpen={setOpen} stats={stats} />
             <ButtonStrip className={styles.work_buttons}>
 
-                <Tooltip title={orgUnit === null ? i18n.t("Please select an organisation unit before") : ""}>
+                <Tooltip data-test="edit-mote-tooltip" title={orgUnit === null ? i18n.t("Please select an organisation unit before") : ""}>
                     <Button
+                        data-test="edit-mote-button"
                         onClick={() => setEditionMode(!editionMode)}
                         icon={editionMode ? <EditOffIcon /> : <IconEdit24 />}
                     >
-                        <span>{editionMode ?i18n.t("Disable Edition Mode") :i18n.t("Allow Edit Mode")}</span>
+                        <span>{editionMode ? i18n.t("Disable Edition Mode") : i18n.t("Allow Edit Mode")}</span>
                     </Button >
                 </Tooltip>
 
-                <Tooltip title={!areAllSelected() ? i18n.t("Please select all filters"): ""} >
-                    <span>
-                        <DropdownButton
-                            name={<span className={styles.work_buttons_text}>{i18n.t("Bulk Performance")}</span> as unknown as string}
-                            disabled={!!(orgUnit == undefined || !areAllSelected() || academicYear == undefined)}
-                            icon={<IconUserGroup16 />}
-                            options={enrollmentOptions}
-                        />
-                    </span>
+                <Tooltip data-test="enrollment-actions-tooltip" title={!areAllSelected() ? i18n.t("Please select all filters") : ""} >
+                    <DropdownButton
+                        dataTest="enrollment-actions-dropdown"
+                        name={<span className={styles.work_buttons_text}>{i18n.t("Bulk Performance")}</span> as unknown as string}
+                        disabled={!!(orgUnit == undefined || !areAllSelected() || academicYear == undefined)}
+                        icon={<IconUserGroup16 />}
+                        options={enrollmentOptions}
+                    />
                 </Tooltip>
 
             </ButtonStrip>

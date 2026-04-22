@@ -123,6 +123,7 @@ export default function Performance({ i18n, baseUrl }: { i18n: D2I18n, baseUrl: 
       {
         !(Boolean(schoolName) && Boolean(school)) ?
           <InfoPage
+            dataTest="performance-info-page"
             title={i18n.t("SEMIS-Performance")}
             sections={[
               {

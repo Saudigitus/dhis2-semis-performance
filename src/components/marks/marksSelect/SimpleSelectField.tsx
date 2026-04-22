@@ -324,6 +324,7 @@ export function SingleSelect({
                       ref={menuRef}
                       className={`dhis2-single-select__menu${dense ? ' dhis2-single-select__menu--dense' : ''}`}
                       style={menuStyle}
+                      data-test={`simple-select-menu-${id || ''}`}
                       role="presentation"
                       onBlur={handleMenuBlur}
                       onFocus={handleMenuFocus}
@@ -334,6 +335,7 @@ export function SingleSelect({
                               <input
                                   ref={searchRef}
                                   type="text"
+                                  data-test={`simple-select-search-${id || ''}`}
                                   className="dhis2-single-select__search-input"
                                   placeholder={filterPlaceholder}
                                   value={filter}
@@ -348,11 +350,14 @@ export function SingleSelect({
 
                       <ul
                           ref={optionsRef}
+                          data-test={`simple-select-options-${id || ''}`}
                           className="dhis2-single-select__options"
                           role="listbox"
                       >
                           {filtered.length === 0 ? (
-                              <li className="dhis2-single-select__empty">
+                              <li 
+                                  data-test={`simple-select-empty-${id || ''}`}
+                                  className="dhis2-single-select__empty">
                                   {noMatchText}
                               </li>
                           ) : (
@@ -387,6 +392,7 @@ export function SingleSelect({
                                           onClick={() => {
                                               selectOption(option.value);
                                           }}
+                                          data-test={`simple-select-option-${id || ''}`}
                                       >
                                           <CheckIcon visible={isSelected} />
                                           {option.label}
@@ -418,15 +424,19 @@ export function SingleSelect({
                 aria-haspopup="listbox"
                 aria-expanded={open}
                 onClick={() => (open ? closeMenu() : openMenu())}
+                data-test={`simple-select-trigger-${id || ''}`}
             >
                 <span
+                    data-test={`simple-select-trigger-content-${id || ''}`}
                     className={`dhis2-single-select__trigger-content${!value ? ' dhis2-single-select__placeholder' : ''}`}
                 >
                     {value ? selectedLabel : placeholder}
                 </span>
 
                 {error && <Error />}
-                <span className="dhis2-single-select__actions">
+                <span 
+                    data-test={`simple-select-trigger-actions-${id || ''}`}
+                    className="dhis2-single-select__actions">
                     <ChevronIcon open={open} />
                 </span>
             </button>
@@ -434,10 +444,14 @@ export function SingleSelect({
             {dropdownMenu}
 
             {error && errorText && (
-                <p className="dhis2-single-select__error-text">{errorText}</p>
+                <p 
+                    data-test={`simple-select-error-text-${id || ''}`}
+                    className="dhis2-single-select__error-text">{errorText}</p>
             )}
             {!error && helperText && (
-                <p className="dhis2-single-select__helper">{helperText}</p>
+                <p 
+                    data-test={`simple-select-helper-${id || ''}`}
+                    className="dhis2-single-select__helper">{helperText}</p>
             )}
         </div>
     );

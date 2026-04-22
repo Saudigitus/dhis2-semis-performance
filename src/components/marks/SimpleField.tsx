@@ -49,6 +49,7 @@ export default function SimpleField(props: SimpleFieldProps) {
                     display: 'inline-block',
                     width: '180px',
                 }}
+                data-test={`simple-field-${field?.id || ''}`}
             >
                 <input
                     {...field}
@@ -73,6 +74,7 @@ export default function SimpleField(props: SimpleFieldProps) {
                         transition: "border-color 0.3s ease, box-shadow 0.3s ease",
                         padding: '8px',
                     }}
+                    data-test={`simple-field-input-${field?.id || ''}`}
                 />
 
                 {(loading || error || success || warning) && (
@@ -84,6 +86,7 @@ export default function SimpleField(props: SimpleFieldProps) {
                             transform: 'translateY(-50%)',
                             pointerEvents: 'none',
                         }}
+                        data-test={`simple-field-icon-${field?.id || ''}`}
                     >
                         {loading && <FiLoader color="#ccc" size={20} title={content} />}
                         {success && <FiCheckCircle color="green" size={20} title={content} />}
@@ -93,7 +96,9 @@ export default function SimpleField(props: SimpleFieldProps) {
                 )}
             </div>
 
-            <div style={{ fontSize: '10px', color: '#6c757d', marginTop: '4px' }}>
+            <div
+                data-test={`simple-field-content-${field?.id || ''}`}
+                style={{ fontSize: '10px', color: '#6c757d', marginTop: '4px' }}>
                 {content}
             </div>
         </>

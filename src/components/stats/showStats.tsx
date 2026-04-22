@@ -21,6 +21,7 @@ export default function ShowStats({ stats, open, setOpen }: { setOpen: (args: bo
     return (
         <ModalComponent
             open={open}
+            dataTest="show-stats-modal"
             handleClose={() => setOpen(!open)}
             children={
                 <div>
@@ -31,8 +32,8 @@ export default function ShowStats({ stats, open, setOpen }: { setOpen: (args: bo
                     <WithPadding />
 
                     <ButtonStrip>
-                        <SummaryCard color="success" label="Promoted students" value={stats?.posted ?? 0} />
-                        <SummaryCard color="error" label="No promoted students" value={stats?.conflicts?.length ?? 0} />
+                        <SummaryCard dataTest="show-stats-promoted-students" color="success" label="Promoted students" value={stats?.posted ?? 0} />
+                        <SummaryCard dataTest="show-stats-no-promoted-students" color="error" label="No promoted students" value={stats?.conflicts?.length ?? 0} />
                     </ButtonStrip>
 
                     <WithPadding />
