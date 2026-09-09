@@ -52,7 +52,7 @@ function EnrollmentActionsButtons({ setEditionMode, editionMode, i18n, baseUrl }
                     ...(grade ? [`${selectedDataStoreKey.registration.grade}:in:${grade}`] : []),
                     ...(section ? [`${selectedDataStoreKey.registration.section}:in:${section}`] : []),
                 ]}
-                label={i18n.t('Export students performace')}
+                label={i18n.t('Export students performance')}
                 module='performance'
                 onError={(e: any) => { showAlert(e) }}
                 programConfig={programData!}
@@ -75,11 +75,11 @@ function EnrollmentActionsButtons({ setEditionMode, editionMode, i18n, baseUrl }
                         onClick={() => setEditionMode(!editionMode)}
                         icon={editionMode ? <EditOffIcon /> : <IconEdit24 />}
                     >
-                        <span>{editionMode ?i18n.t("Disable Edition Mode") :i18n.t("Allow Edit Mode")}</span>
+                        <span>{editionMode ? i18n.t("Disable Edition Mode") : i18n.t("Allow Edit Mode")}</span>
                     </Button >
                 </Tooltip>
 
-                <Tooltip title={!areAllSelected() ? i18n.t("Please select all filters"): ""} >
+                <Tooltip title={!areAllSelected() ? i18n.t("Please select all filters") : ""} >
                     <span>
                         <DropdownButton
                             name={<span className={styles.work_buttons_text}>{i18n.t("Bulk Performance")}</span> as unknown as string}

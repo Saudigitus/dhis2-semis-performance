@@ -14,7 +14,7 @@ msgstr "Notas em Massa"
 msgid "Import Performance"
 msgstr "Importar notas"
 
-msgid "Export students performace"
+msgid "Export students performance"
 msgstr "Exportar notas dos estudantes"
 
 msgid "Please select an organisation unit before"
