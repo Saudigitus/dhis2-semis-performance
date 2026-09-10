@@ -14,7 +14,7 @@ msgstr "Performance en Masse"
 msgid "Import Performance"
 msgstr "Importer la Performance"
 
-msgid "Export students performace"
+msgid "Export students performance"
 msgstr "Exporter la performance des étudiants"
 
 msgid "Please select an organisation unit before"
