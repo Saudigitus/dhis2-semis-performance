@@ -30,14 +30,14 @@ function EnrollmentActionsButtons({ setEditionMode, editionMode, i18n, baseUrl }
         {
             label: <DataImporter
                 baseURL={baseUrl}
-                label={i18n.t('Bulk Performance')}
+                label={i18n.t('Update performance')}
                 module='performance'
                 onError={(e: any) => { showAlert(e) }}
                 programConfig={programData!}
                 sectionType={sectionName}
                 selectedSectionDataStore={selectedDataStoreKey}
                 updating={false}
-                title={i18n.t("Import Performance")}
+                title={i18n.t("Update performance")}
 
             />,
             divider: true,
@@ -52,7 +52,7 @@ function EnrollmentActionsButtons({ setEditionMode, editionMode, i18n, baseUrl }
                     ...(grade ? [`${selectedDataStoreKey.registration.grade}:in:${grade}`] : []),
                     ...(section ? [`${selectedDataStoreKey.registration.section}:in:${section}`] : []),
                 ]}
-                label={i18n.t('Export students performance')}
+                label={i18n.t('Export performance')}
                 module='performance'
                 onError={(e: any) => { showAlert(e) }}
                 programConfig={programData!}
