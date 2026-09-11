@@ -41,6 +41,7 @@ export default function Performance({ i18n, baseUrl }: { i18n: D2I18n, baseUrl: 
     values: memoizedValues,
     type: "programStage",
     program: program?.id as string,
+    context: { event: { programStage: selected.id, orgUnit: school } },
   })
 
   useEffect(() => {
