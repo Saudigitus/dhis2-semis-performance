@@ -145,7 +145,6 @@ export default function Performance({ i18n, baseUrl }: { i18n: D2I18n, baseUrl: 
                 rowsData: tableData.data, mode: editionMode, dataElementIds, program: program!.id,
                 headerRows: changeDataElementType({ headerRows: updatedVariables as unknown as any, dataElementIds }),
               })}
-              defaultFilterNumber={5}
               filterState={filterState}
               loading={loading}
               rightElements={<EnrollmentActionsButtons i18n={i18n} setEditionMode={setEditionMode} editionMode={editionMode} baseUrl={baseUrl} />}
