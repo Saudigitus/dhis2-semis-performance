@@ -36,6 +36,7 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
 
     const { runRulesEngine, updatedVariables } = RulesEngine({
         values: memoizedValues, program: program, type: "programStage", variables: memoizedDataElements as any,
+        context: { event: { programStage, orgUnit: value.orgUnitId, event: value.programStageEvent } },
     })
 
     const [newMark, setNewMark] = useState(updatedVariables[0].value)
