@@ -56,7 +56,7 @@ export default function SimpleField(props: SimpleFieldProps) {
                     {...otherProps}
                     min={0}
                     type="number"
-                    key={value || field?.id || ''}
+                    key={field?.id || ''}
                     value={value}
                     onBlur={handleBlur}
                     onChange={handleChange}

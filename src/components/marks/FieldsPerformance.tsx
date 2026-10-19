@@ -101,17 +101,33 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
                     onEventCreated?.(createdEventId)
 
                     if (resp?.stats?.ignored > 0) {
+                        // Falha ao criar o evento: mostra o alerta sem fazer reload e esconde-o ao fim de 3 segundos
                         setNewMark(null)
                         setError(true)
                         show({
-                            message: `Could not save the marks: ${resp?.validationReport?.errorReports?.[0]?.message}`,
-                            type: { critical: false }, duration: 3000
+                            message: `Could not create the event: ${resp?.validationReport?.errorReports?.[0]?.message || ""}`,
+                            type: { critical: true }
                         });
+                        setTimeout(() => {
+                            hide();
+                            setError(false);
+                        }, 3000);
                     }
                 })
-            
-                .catch(() => {
-                    // onEventCreated?.()
+
+                .catch((err: any) => {
+                    // Falha ao criar o evento: liberta a linha, mostra o alerta sem reload e esconde-o ao fim de 3 segundos
+                    onEventCreated?.()
+                    setNewMark(null)
+                    setError(true)
+                    show({
+                        message: `Could not create the event: ${err?.details?.message || ""}`,
+                        type: { critical: true }
+                    });
+                    setTimeout(() => {
+                        hide();
+                        setError(false);
+                    }, 3000);
                 })
         } else {
             const marks = {
