@@ -19,6 +19,9 @@ interface IncludeFieldsProps {
     dataElementIds: string[];
     otherProps?: any;
     program: string;
+    eventOverrides?: Record<string, { eventId?: string; creating?: boolean }>;
+    onEventCreating?: (rowKey: string) => void;
+    onEventCreated?: (rowKey: string, eventId?: string) => void;
 }
 
 interface changeDataElementTypeProps {
@@ -36,7 +39,7 @@ interface changeDataElementTypeProps {
 }
 
 export const includeFields = (props: IncludeFieldsProps) => {
-    const { rowsData, headerRows, mode, dataElementIds, otherProps, program } = props;
+    const { rowsData, headerRows, mode, dataElementIds, otherProps, program, eventOverrides, onEventCreating, onEventCreated } = props;
 
     // Create a deep copy of the input rowsData to avoid mutating the original
     const modifiedRowsData = cloneDeep(rowsData);
@@ -45,6 +48,14 @@ export const includeFields = (props: IncludeFieldsProps) => {
     const newRowsData = modifiedRowsData.map((row: any, i: number) => {
         // Create a new row object to avoid mutating the cloned row
         const newRow = { ...row };
+
+        // Identifica a linha da TEI e aplica o id do evento criado (se existir)
+        const rowKey = String(row.trackedEntity ?? row.enrollmentId ?? i);
+        const override = eventOverrides?.[rowKey];
+
+        if (override?.eventId && !row.programStageEvent) {
+            row.programStageEvent = override.eventId;
+        }
 
         headerRows.forEach(headerRow => {
             const { id, type } = headerRow;
@@ -64,6 +75,10 @@ export const includeFields = (props: IncludeFieldsProps) => {
                     // handleChange, error, and warning would typically be passed from a parent component
                     program: program,
                     originalData: rowsData[i],
+                    // Desabilita a linha enquanto o id do evento está sendo criado/propagado
+                    rowDisabled: Boolean(override?.creating),
+                    onEventCreating: () => onEventCreating?.(rowKey),
+                    onEventCreated: (eventId?: string) => onEventCreated?.(rowKey, eventId),
                 });
             }
         });

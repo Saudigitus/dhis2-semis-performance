@@ -30,6 +30,8 @@ export default function Performance({ i18n, baseUrl }: { i18n: D2I18n, baseUrl: 
   const { academicYear, grade, class: section, schoolName, school, programStage } = urlParameters
   const { getData, tableData, loading } = useTableData({ module: Modules.Performance });
   const [filterState, setFilterState] = useState<{ dataElements: any[], attributes: any[] }>({ attributes: [], dataElements: [] });
+  // Guarda o id do evento criado por linha da TEI (e o estado "criando") para propagar via includeFields
+  const [eventOverrides, setEventOverrides] = useState<Record<string, { eventId?: string; creating?: boolean }>>({});
   const { columns } = useHeader({ dataStoreData, programConfigData: program as unknown as ProgramConfig, programStage: selected.id! });
   const values = { [dataStoreData.registration.grade]: grade }
   const { academicYear: academicYearId } = useSchoolCalendarKey()
@@ -119,6 +121,16 @@ export default function Performance({ i18n, baseUrl }: { i18n: D2I18n, baseUrl: 
     (item) => item.dataElement.id
   );
 
+  // Marca a linha como "criando evento" para desabilitá-la enquanto o id não é propagado
+  const handleEventCreating = (rowKey: string) => {
+    setEventOverrides((prev) => ({ ...prev, [rowKey]: { ...prev[rowKey], creating: true } }))
+  }
+
+  // Guarda o id do evento criado na linha da TEI
+  const handleEventCreated = (rowKey: string, eventId?: string) => {
+    setEventOverrides((prev) => ({ ...prev, [rowKey]: { eventId: eventId ?? prev[rowKey]?.eventId, creating: false } }))
+  }
+
   return (
     <div style={{ height: "85vh" }}>
       {
@@ -145,10 +157,13 @@ export default function Performance({ i18n, baseUrl }: { i18n: D2I18n, baseUrl: 
               tableData={includeFields({
                 rowsData: tableData.data, mode: editionMode, dataElementIds, program: program!.id,
                 headerRows: changeDataElementType({ headerRows: updatedVariables as unknown as any, dataElementIds }),
+                eventOverrides,
+                onEventCreating: handleEventCreating,
+                onEventCreated: handleEventCreated,
               })}
               filterState={filterState}
               loading={loading}
-              rightElements={<EnrollmentActionsButtons i18n={i18n} setEditionMode={setEditionMode} editionMode={editionMode} baseUrl={baseUrl} />}
+              rightElements={<EnrollmentActionsButtons i18n={i18n} loadingData={loading} setEditionMode={setEditionMode} editionMode={editionMode} baseUrl={baseUrl} />}
               setFilterState={setFilterState}
               pagination={pagination}
               setPagination={setPagination}

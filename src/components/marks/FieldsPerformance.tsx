@@ -1,9 +1,10 @@
 import { format } from 'date-fns';
 import { useEffect, useMemo, useState } from 'react';
 import useSaveMarks from '../../hooks/marks/useSaveMarks';
-import { EnrollmentStatus } from 'dhis2-semis-types';
+import { EnrollmentStatus, TableDataRefetch } from 'dhis2-semis-types';
 import { RulesEngine, useShowAlerts, useUploadEvents, useUrlParams } from 'dhis2-semis-functions';
 import { performanceFieldsMapping } from './performanceFieldsMapping';
+import { useRecoilState } from 'recoil';
 
 interface valueType extends Record<string, any> {
     enrollmentId: string
@@ -20,12 +21,15 @@ type FieldsPerformancePros = {
     otherProps: any,
     program: string
     originalData: any
+    rowDisabled?: boolean
+    onEventCreating?: () => void
+    onEventCreated?: (eventId?: string) => void
 }
 
 export default function FieldsPerformance(props: FieldsPerformancePros) {
     const { urlParameters } = useUrlParams()
     const { programStage, schoolName } = urlParameters
-    const { dataElements, value, program, originalData } = props;
+    const { dataElements, value, program, originalData, rowDisabled, onEventCreating, onEventCreated } = props;
     const [values, setValues] = useState({ ...value })
 
     const { uploadValues } = useUploadEvents()
@@ -60,7 +64,10 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
     }
 
     const handleBlur = async () => {
-        if (!values?.programStageEvent) {
+        if (!value?.programStageEvent) {
+            // Ainda não existe evento para esta TEI: avisa o includeFields para desabilitar a linha enquanto cria
+            onEventCreating?.()
+
             const data = {
                 events: [{
                     notes: [],
@@ -80,15 +87,31 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
 
             await uploadValues(data, "COMMIT", "CREATE_AND_UPDATE")
                 .then((resp: any) => {
+                    // Pega o id do evento criado na resposta
+                    const createdEventId = resp?.bundleReport?.typeReportMap?.event?.objectReports?.[0]?.uid
+                        ?? resp?.bundleReport?.typeReportMap?.EVENT?.objectReports?.[0]?.uid
+
+                    if (createdEventId) {
+                        // Sobe o id do evento para a linha da TEI (via includeFields),
+                        // para que as próximas células salvem apenas dataValues
+                        value.programStageEvent = createdEventId
+                        if (originalData) originalData.programStageEvent = createdEventId
+                    }
+
+                    onEventCreated?.(createdEventId)
+
                     if (resp?.stats?.ignored > 0) {
                         setNewMark(null)
                         setError(true)
                         show({
                             message: `Could not save the marks: ${resp?.validationReport?.errorReports?.[0]?.message}`,
-                            type: { critical: true }
+                            type: { critical: false }, duration: 3000
                         });
-                        setTimeout(() => { hide; setError(false); }, 3000);
                     }
+                })
+            
+                .catch(() => {
+                    // onEventCreated?.()
                 })
         } else {
             const marks = {
@@ -133,7 +156,7 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
                     error: updatedVariables[0]?.error || error,
                     success: success,
                     warning: updatedVariables[0]?.warning,
-                    disabled: updatedVariables[0]?.disabled,
+                    disabled: updatedVariables[0]?.disabled || rowDisabled,
                     value: newMark,
                     handleBlur: handleBlur,
                     handleChange: handleChange,

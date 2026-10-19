@@ -10,7 +10,7 @@ import EditOffIcon from '@mui/icons-material/EditOff';
 import useGetSelectedKeys from '../../hooks/config/useGetSelectedKeys';
 import { D2I18n } from 'dhis2-semis-types';
 
-function EnrollmentActionsButtons({ setEditionMode, editionMode, i18n, baseUrl }: { i18n: D2I18n, setEditionMode: (editionMode: boolean) => void, editionMode: boolean, baseUrl: string }) {
+function EnrollmentActionsButtons({ setEditionMode, editionMode, i18n, baseUrl, loadingData }: { i18n: D2I18n, setEditionMode: (editionMode: boolean) => void, editionMode: boolean, baseUrl: string, loadingData?: boolean }) {
     const { urlParameters } = useUrlParams();
     const { school: orgUnit, class: section, grade, academicYear } = urlParameters;
     const { sectionName } = useGetSectionTypeLabel();
@@ -72,6 +72,7 @@ function EnrollmentActionsButtons({ setEditionMode, editionMode, i18n, baseUrl }
 
                 <Tooltip title={orgUnit === null ? i18n.t("Please select an organisation unit before") : ""}>
                     <Button
+                        disabled={loadingData}
                         onClick={() => setEditionMode(!editionMode)}
                         icon={editionMode ? <EditOffIcon /> : <IconEdit24 />}
                     >

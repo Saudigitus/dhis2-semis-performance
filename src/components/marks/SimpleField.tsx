@@ -51,11 +51,12 @@ export default function SimpleField(props: SimpleFieldProps) {
                 }}
             >
                 <input
+               
                     {...field}
                     {...otherProps}
                     min={0}
                     type="number"
-                    key={field?.id || ''}
+                    key={value || field?.id || ''}
                     value={value}
                     onBlur={handleBlur}
                     onChange={handleChange}
