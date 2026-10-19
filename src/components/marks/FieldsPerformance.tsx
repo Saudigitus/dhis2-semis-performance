@@ -27,6 +27,7 @@ type FieldsPerformancePros = {
 }
 
 export default function FieldsPerformance(props: FieldsPerformancePros) {
+    const { hide, show } = useShowAlerts()
     const { urlParameters } = useUrlParams()
     const { programStage, schoolName } = urlParameters
     const { dataElements, value, program, originalData, rowDisabled, onEventCreating, onEventCreated } = props;
@@ -44,7 +45,11 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
     })
 
     const [newMark, setNewMark] = useState(updatedVariables[0].value)
-    const { hide, show } = useShowAlerts()
+
+    function showAlert(message: string, type: any) {
+        show({ message: message, type: type });
+        setTimeout(hide, 5000);
+    }
 
     useEffect(() => {
         runRulesEngine({ overrideValues: memoizedValues, overrideVariables: memoizedDataElements as any })
@@ -104,14 +109,7 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
                         // Falha ao criar o evento: mostra o alerta sem fazer reload e esconde-o ao fim de 3 segundos
                         setNewMark(null)
                         setError(true)
-                        show({
-                            message: `Could not create the event: ${resp?.validationReport?.errorReports?.[0]?.message || ""}`,
-                            type: { critical: true }
-                        });
-                        setTimeout(() => {
-                            hide();
-                            setError(false);
-                        }, 3000);
+                        showAlert(`Could not create the event: ${resp?.validationReport?.errorReports?.[0]?.message || ""}`, { critical: true })
                     }
                 })
 
@@ -120,14 +118,8 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
                     onEventCreated?.()
                     setNewMark(null)
                     setError(true)
-                    show({
-                        message: `Could not create the event: ${err?.details?.message || ""}`,
-                        type: { critical: true }
-                    });
-                    setTimeout(() => {
-                        hide();
-                        setError(false);
-                    }, 3000);
+                    showAlert(`Could not create the event: ${err?.details?.message || ""}`, { critical: true })
+
                 })
         } else {
             const marks = {
