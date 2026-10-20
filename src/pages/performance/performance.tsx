@@ -32,6 +32,9 @@ export default function Performance({ i18n, baseUrl }: { i18n: D2I18n, baseUrl: 
   const [filterState, setFilterState] = useState<{ dataElements: any[], attributes: any[] }>({ attributes: [], dataElements: [] });
   // Guarda o id do evento criado por linha da TEI (e o estado "criando") para propagar via includeFields
   const [eventOverrides, setEventOverrides] = useState<Record<string, { eventId?: string; creating?: boolean }>>({});
+  // The records created on this page belong to one term and one class: forget them when the term,
+  // the school, the class or the academic year changes (otherwise a mark of another term is sent to them).
+  useEffect(() => setEventOverrides({}), [programStage, school, grade, section, academicYear])
   const { columns } = useHeader({ dataStoreData, programConfigData: program as unknown as ProgramConfig, programStage: selected.id! });
   const values = { [dataStoreData.registration.grade]: grade }
   const { academicYear: academicYearId } = useSchoolCalendarKey()
