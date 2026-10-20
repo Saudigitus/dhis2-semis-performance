@@ -51,6 +51,7 @@ export default function SimpleField(props: SimpleFieldProps) {
                 }}
             >
                 <input
+               
                     {...field}
                     {...otherProps}
                     min={0}
