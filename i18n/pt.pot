@@ -20,7 +20,7 @@ msgstr "Exportar notas dos estudantes"
 msgid "Please select an organisation unit before"
 msgstr "Por favor, selecione uma unidade organizacional antes"
 
-msgid "Disable Edition Mode"
+msgid "Disable Edit Mode"
 msgstr "Desativar Modo de Edição"
 
 msgid "Allow Edit Mode"
