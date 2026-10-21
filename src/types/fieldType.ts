@@ -10,6 +10,7 @@ export type SimpleFieldProps = {
     value: string | number;
     handleBlur: () => void;
     handleChange: (e: React.ChangeEvent<HTMLInputElement> | string | number | null | undefined) => void;
+    onBeforeInput?: (e: any) => void;
 };
 
 

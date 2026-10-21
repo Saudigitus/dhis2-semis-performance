@@ -45,6 +45,8 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
     })
 
     const [newMark, setNewMark] = useState(updatedVariables[0].value)
+    // Shown under the field, like the rule messages: a global alert reloads the score sheet.
+    const [onlyNumbers, setOnlyNumbers] = useState(false)
 
     function showAlert(message: string, type: any) {
         show({ message: message, type: type });
@@ -56,6 +58,10 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
     }, [value, newMark])
 
     const handleChange = (e: any) => {
+        // Letters in a number field are reported as an empty value: keep the saved mark instead of erasing it.
+        if (e?.target?.validity?.badInput) return
+
+        setOnlyNumbers(false)
         const newValue = e?.target?.value ?? e
         setNewMark(newValue)
 
@@ -68,7 +74,26 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
         runRulesEngine({ overrideValues: memoizedValues, overrideVariables: memoizedDataElements as any })
     }
 
-    const handleBlur = async () => {
+    // Chrome drops letters typed in a number field and reports an empty, valid value, as if the mark had
+    // been erased: refuse what is not part of a number before it reaches the field.
+    const handleBeforeInput = (e: any) => {
+        if (e?.data && /[^0-9.,-]/.test(e.data)) {
+            e.preventDefault()
+            setOnlyNumbers(true)
+        }
+    }
+
+    const handleBlur = async (e?: any) => {
+        if (e?.target?.validity?.badInput) {
+            // Clear the invalid text so the field accepts a new number; nothing is saved.
+            e.target.value = newMark ?? ''
+            setOnlyNumbers(true)
+            return
+        }
+
+        // A program rule error (red) blocks the save; a warning (orange) is saved and its message stays under the field.
+        if (updatedVariables[0]?.error) return
+
         if (!value?.programStageEvent) {
             // Ainda não existe evento para esta TEI: avisa o includeFields para desabilitar a linha enquanto cria
             onEventCreating?.()
@@ -163,13 +188,14 @@ export default function FieldsPerformance(props: FieldsPerformancePros) {
                     loading: loading,
                     error: updatedVariables[0]?.error || error,
                     success: success,
-                    warning: updatedVariables[0]?.warning,
+                    warning: updatedVariables[0]?.warning || onlyNumbers,
                     disabled: updatedVariables[0]?.disabled || rowDisabled,
                     value: newMark,
                     handleBlur: handleBlur,
                     handleChange: handleChange,
+                    onBeforeInput: handleBeforeInput,
                     field: updatedVariables[0],
-                    content: updatedVariables[0]?.content || "",
+                    content: onlyNumbers ? "Only numbers are accepted" : updatedVariables[0]?.content || "",
                     fieldType: updatedVariables[0]?.valueType,
                     options: updatedVariables[0]?.options?.optionSet?.options
                 })

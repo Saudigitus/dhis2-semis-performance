@@ -20,7 +20,7 @@ msgstr "Exporter la performance des étudiants"
 msgid "Please select an organisation unit before"
 msgstr "Veuillez d'abord sélectionner une unité d'organisation"
 
-msgid "Disable Edition Mode"
+msgid "Disable Edit Mode"
 msgstr "Désactiver le Mode d'Édition"
 
 msgid "Allow Edit Mode"

@@ -8,7 +8,8 @@ import { useCheckFilters, useGetSectionTypeLabel, useShowAlerts, useUrlParams } 
 import { DataExporter, DataImporter, CustomDropdown as DropdownButton, useSchoolCalendarKey } from 'dhis2-semis-components';
 import EditOffIcon from '@mui/icons-material/EditOff';
 import useGetSelectedKeys from '../../hooks/config/useGetSelectedKeys';
-import { D2I18n } from 'dhis2-semis-types';
+import { useSetRecoilState } from 'recoil';
+import { D2I18n, TableDataRefetch } from 'dhis2-semis-types';
 
 function EnrollmentActionsButtons({ setEditionMode, editionMode, i18n, baseUrl, loadingData }: { i18n: D2I18n, setEditionMode: (editionMode: boolean) => void, editionMode: boolean, baseUrl: string, loadingData?: boolean }) {
     const { urlParameters } = useUrlParams();
@@ -20,6 +21,7 @@ function EnrollmentActionsButtons({ setEditionMode, editionMode, i18n, baseUrl, 
     const { hide, show } = useShowAlerts()
     const { areAllSelected } = useCheckFilters({ filters: (selectedDataStoreKey.filters.dataElements ?? []) as unknown as any })
     const { academicYear: academicYearId } = useSchoolCalendarKey()
+    const setRefetch = useSetRecoilState(TableDataRefetch);
 
     const showAlert = (error: any) => {
         show({ message: `Unknown error: ${error}`, type: { critical: true } })
@@ -38,7 +40,7 @@ function EnrollmentActionsButtons({ setEditionMode, editionMode, i18n, baseUrl, 
                 selectedSectionDataStore={selectedDataStoreKey}
                 updating={false}
                 title={i18n.t("Update performance")}
-
+                onClose={() => setRefetch(prev => !prev)}
             />,
             divider: true,
             disabled: false,
@@ -76,7 +78,7 @@ function EnrollmentActionsButtons({ setEditionMode, editionMode, i18n, baseUrl, 
                         onClick={() => setEditionMode(!editionMode)}
                         icon={editionMode ? <EditOffIcon /> : <IconEdit24 />}
                     >
-                        <span>{editionMode ? i18n.t("Disable Edition Mode") : i18n.t("Allow Edit Mode")}</span>
+                        <span>{editionMode ? i18n.t("Disable Edit Mode") : i18n.t("Allow Edit Mode")}</span>
                     </Button >
                 </Tooltip>
 
